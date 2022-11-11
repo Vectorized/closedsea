@@ -35,7 +35,7 @@ See `src/example/ExampleERC721.sol`.
 
 ```ml
 src
-├─ OperatorFilterer.sol — "Operator Filterer that fits regular and upgradeable contracts"
+├─ OperatorFilterer.sol — "Operator Filterer for regular and upgradeable contracts"
 └─ example
    ├─ ExampleERC1155.sol — "ERC1155 example"
    ├─ ExampleERC721.sol — "ERC721 example with demonstration of togglability"
