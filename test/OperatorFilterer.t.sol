@@ -84,4 +84,9 @@ contract OperatorFiltererTest is BaseRegistryTest {
         Filterer filterer2 = new Filterer();
         assertTrue(filterer2.testFilter(notFiltered));
     }
+
+    function testRegisterNonExistentRegistryDoesNotRevert() public {
+        new ConcreteOperatorFilterer(address(0x12345678791234567879), true);
+        new ConcreteOperatorFilterer(address(0x12345678791234567879), false);
+    }
 }
