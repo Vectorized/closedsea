@@ -1,17 +1,28 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
+/// @notice Optimized and flexible operator filterer to abide to OpenSea's
+/// mandatory on-chain royalty enforcement in order for new collections to
+/// receive royalties.
+/// For more information, see:
+/// See: https://github.com/ProjectOpenSea/operator-filter-registry
 abstract contract OperatorFilterer {
+    /// @dev Emitted when the caller is a blocked operator.
     error OperatorNotAllowed(address operator);
 
+    /// @dev The default OpenSea operator blocklist subscription.
     address internal constant _OPENSEA_DEFAULT_SUBSCRIPTION = 0x3cc6CddA760b79bAfa08dF41ECFA224f810dCeB6;
 
+    /// @dev The OpenSea operator filter registry.
     address internal constant _OPERATOR_FILTER_REGISTRY = 0x000000000000AAeB6D7670E522A718067333cd4E;
 
+    /// @dev Registers the current contract to OpenSea's operator filter,
+    /// and subscribe to the default OpenSea operator blocklist.
     function _registerForOperatorFiltering() internal {
         _registerForOperatorFiltering(_OPENSEA_DEFAULT_SUBSCRIPTION, true);
     }
 
+    /// @dev Registers the current contract to OpenSea's operator filter.
     function _registerForOperatorFiltering(address subscriptionOrRegistrantToCopy, bool subscribe) internal {
         /// @solidity memory-safe-assembly
         assembly {
@@ -54,6 +65,8 @@ abstract contract OperatorFilterer {
         }
     }
 
+    /// @dev Modifier to guard a function and revert if `from` is a blocked operator.
+    /// Can be turned off by passing false for `filterEnabled`.
     modifier onlyAllowedOperator(address from, bool filterEnabled) virtual {
         /// @solidity memory-safe-assembly
         assembly {
