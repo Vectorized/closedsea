@@ -1,119 +1,76 @@
-<img align="right" width="150" height="150" top="100" src="./assets/readme.jpg">
+# ClosedSea 🚪
 
-# femplate • [![ci](https://github.com/abigger87/femplate/actions/workflows/ci.yml/badge.svg)](https://github.com/abigger87/femplate/actions/workflows/ci.yml) ![license](https://img.shields.io/github/license/abigger87/femplate?label=license) ![solidity](https://img.shields.io/badge/solidity-^0.8.15-lightgrey)
+[![NPM][npm-shield]][npm-url]
+[![CI][ci-shield]][ci-url]
+[![MIT License][license-shield]][license-url]
 
-A **Clean**, **Robust** Template for Foundry Projects.
+Gas optimized and flexible version of OpenSea's Mandatory Operator Filterer for royalties.
 
-## Getting Started
+## Features
 
-Click [`use this template`](https://github.com/abigger87/femplate/generate) to create a new repository with this repo as the initial state.
+- `modifier onlyAllowedOperator(address from, bool filterEnabled)`  
+   modifier that allows conditional toggling of the filter.  
 
-Or, if your repo already exists, run:
-```sh
-forge init --template https://github.com/abigger87/femplate
-git submodule update --init --recursive
-forge install
-```
+   You can passed in a bool extracted from a packed variable for `filterEnabled`.
 
-Run `./scripts/rename.sh` to rename all instances of `femplate` with the name of your project/repository.
+- `_registerForOperatorFiltering()` 
 
-## Blueprint
+   Registration function that can be called in an initializer, anywhere.  
+   
+   Can be called repeatedly without issues.
+
+- Gas optimized. Saves 300+ gas on transfers.
+
+- Keeps your cilents and some marketplaces happy.
+
+## Example
+
+See `src/example/ExampleERC721.sol`.
+
+## Contracts
 
 ```ml
-lib
-├─ forge-std — https://github.com/foundry-rs/forge-std
-├─ solmate — https://github.com/Rari-Capital/solmate
-scripts
-├─ Deploy.s.sol — Simple Deployment Script
 src
-├─ Greeter — A Minimal Greeter Contract
-test
-└─ Greeter.t — Exhaustive Tests
+├─ OperatorFilterer.sol — "Operator Filterer that fits regular and upgradeable contracts"
+└─ example
+   ├─ ExampleERC1155.sol — "ERC1155 example"
+   ├─ ExampleERC721.sol — "ERC721 example with demonstration of togglability"
+   └─ upgradeable
+      ├─ ExampleERC1155Upgradeable.sol — "ERC1155 upgradeable example"
+      └─ ExampleERC721Upgradeable.sol — "ERC721 upgradeable example"
 ```
 
+## Safety
 
-## Development
+This is **experimental software** and is provided on an "as is" and "as available" basis.
 
-**Setup**
-```bash
-forge install
+We **do not give any warranties** and **will not be liable for any loss** incurred through any use of this codebase.
+
+## Installation
+
+To install with [**Foundry**](https://github.com/gakonst/foundry):
+
+```sh
+forge install vectorized/closedsea
 ```
 
-**Building**
-```bash
-forge build
+To install with [**Hardhat**](https://github.com/nomiclabs/hardhat) or [**Truffle**](https://github.com/trufflesuite/truffle):
+
+```sh
+npm install closedsea
 ```
-
-**Testing**
-```bash
-forge test
-```
-
-**Deployment & Verification**
-
-Inside the [`scripts/`](./scripts/) directory are a few preconfigured scripts that can be used to deploy and verify contracts.
-
-Scripts take inputs from the cli, using silent mode to hide any sensitive information.
-
-_NOTE: These scripts are required to be _executable_ meaning they must be made executable by running `chmod +x ./scripts/*`._
-
-_NOTE: these scripts will prompt you for the contract name and deployed addresses (when verifying). Also, they use the `-i` flag on `forge` to ask for your private key for deployment. This uses silent mode which keeps your private key from being printed to the console (and visible in logs)._
-
-
-### First time with Forge/Foundry?
-
-See the official Foundry installation [instructions](https://github.com/foundry-rs/foundry/blob/master/README.md#installation).
-
-Then, install the [foundry](https://github.com/foundry-rs/foundry) toolchain installer (`foundryup`) with:
-```bash
-curl -L https://foundry.paradigm.xyz | bash
-```
-
-Now that you've installed the `foundryup` binary,
-anytime you need to get the latest `forge` or `cast` binaries,
-you can run `foundryup`.
-
-So, simply execute:
-```bash
-foundryup
-```
-
-🎉 Foundry is installed! 🎉
-
-
-### Writing Tests with Foundry
-
-With [Foundry](https://github.com/foundry-rs/foundry), all tests are written in Solidity! 🥳
-
-Create a test file for your contract in the `test/` directory.
-
-For example, [`src/Greeter.sol`](./src/Greeter.sol) has its test file defined in [`./test/Greeter.t.sol`](./test/Greeter.t.sol).
-
-To learn more about writing tests in Solidity for Foundry, reference Rari Capital's [solmate](https://github.com/Rari-Capital/solmate/tree/main/src/test) repository created by [@transmissions11](https://twitter.com/transmissions11).
-
-
-### Configure Foundry
-
-Using [foundry.toml](./foundry.toml), Foundry is easily configurable.
-
-For a full list of configuration options, see the Foundry [configuration documentation](https://github.com/foundry-rs/foundry/blob/master/config/README.md#all-options).
-
-
-## License
-
-[AGPL-3.0-only](https://github.com/abigger87/femplate/blob/master/LICENSE)
-
 
 ## Acknowledgements
 
-- [femplate](https://github.com/abigger87/femplate)
-- [foundry](https://github.com/foundry-rs/foundry)
-- [solmate](https://github.com/Rari-Capital/solmate)
-- [forge-std](https://github.com/brockelmore/forge-std)
-- [forge-template](https://github.com/foundry-rs/forge-template)
-- [foundry-toolchain](https://github.com/foundry-rs/foundry-toolchain)
+This repository is inspired by and directly modified from:
 
+- [operator-filter-registry](https://github.com/ProjectOpenSea/operator-filter-registry)
 
-## Disclaimer
+[npm-shield]: https://img.shields.io/npm/v/closedsea.svg
+[npm-url]: https://www.npmjs.com/package/closedsea
 
-_These smart contracts are being provided as is. No guarantee, representation or warranty is being made, express or implied, as to the safety or correctness of the user interface or the smart contracts. They have not been audited and as such there can be no assurance they will work as intended, and users may experience delays, failures, errors, omissions, loss of transmitted information or loss of funds. The creators are not liable for any of the foregoing. Users should proceed with caution and use at their own risk._
+[ci-shield]: https://img.shields.io/github/workflow/status/vectorized/closedsea/ci?label=build
+[ci-url]: https://github.com/vectorized/closedsea/actions/workflows/ci.yml
+
+[license-shield]: https://img.shields.io/badge/License-MIT-green.svg
+[license-url]: https://github.com/vectorized/closedsea/blob/main/LICENSE.txt
