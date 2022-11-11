@@ -30,7 +30,7 @@ abstract contract OperatorFilterer {
             // Number of bytes in the calldata to send to the registry.
             let numCalldataBytes := 0
             // prettier-ignore
-            for {} extcodesize(registry) {} {
+            for {} 1 {} {
                 // Clean the upper 96 bits of `subscriptionOrRegistrantToCopy` in case they are dirty.
                 subscriptionOrRegistrantToCopy := shr(96, shl(96, subscriptionOrRegistrantToCopy))
                 if iszero(subscribe) {
