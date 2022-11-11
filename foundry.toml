@@ -33,14 +33,14 @@ via_ir = true
 runs = 1_000
 
 [profile.min-solc]
-solc_version = '0.8.4'
+solc_version = '0.8.13'
 
 [profile.min-solc.fuzz]
 runs = 1_000
 
 [profile.min-solc-via-ir]
 via_ir = true
-solc_version = '0.8.4'
+solc_version = '0.8.13'
 
 [profile.min-solc-via-ir.fuzz]
 runs = 1_000
