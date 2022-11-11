@@ -13,11 +13,15 @@ Gas optimized and flexible version of OpenSea's Mandatory Operator Filterer for 
 
    You can passed in a bool extracted from a packed variable for `filterEnabled`.
 
-- `_registerForOperatorFiltering()` 
+- `_registerForOperatorFiltering(address subscriptionOrRegistrantToCopy, bool subscribe)`
 
    Registration function that can be called in an initializer, anywhere.  
-   
+
    Can be called repeatedly without issues.
+
+- `_registerForOperatorFiltering()` 
+
+   Registration function similar to above. Uses OpenSea's default block list. 
 
 - Gas optimized. Saves 300+ gas on transfers.
 
