@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.13;
+pragma solidity ^0.8.4;
 
 import {ExampleERC721} from "../../src/example/ExampleERC721.sol";
 import {BaseRegistryTest} from "../BaseRegistryTest.sol";
