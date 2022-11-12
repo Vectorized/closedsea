@@ -27,8 +27,6 @@ abstract contract OperatorFilterer {
         /// @solidity memory-safe-assembly
         assembly {
             let registry := _OPERATOR_FILTER_REGISTRY
-            // Number of bytes in the calldata to send to the registry.
-            let numCalldataBytes := 0
             // prettier-ignore
             for {} 1 {} {
                 // Clean the upper 96 bits of `subscriptionOrRegistrantToCopy` in case they are dirty.
@@ -37,30 +35,42 @@ abstract contract OperatorFilterer {
                     if iszero(subscriptionOrRegistrantToCopy) {
                         // Store the function selector of `register(address)`.
                         mstore(0x00, shl(224, 0x4420e486))
-                        numCalldataBytes := 0x24
+                        // Store the `address(this)`.
+                        mstore(0x04, address())
+                        // Store the `subscriptionOrRegistrantToCopy`.
+                        mstore(0x24, subscriptionOrRegistrantToCopy)
+                        // Register into the registry.
+                        pop(call(gas(), registry, 0, 0x00, 0x24, 0x00, 0x00))
+                        // Restore the part of the free memory pointer that was overwritten,
+                        // which is guaranteed to be zero, because of Solidity's memory size limits.
+                        mstore(0x24, 0)
                         break
                     }
                     // Store the function selector of `registerAndCopyEntries(address,address)`.
                     mstore(0x00, shl(224, 0xa0af2903))
-                    numCalldataBytes := 0x44
+                    // Store the `address(this)`.
+                    mstore(0x04, address())
+                    // Store the `subscriptionOrRegistrantToCopy`.
+                    mstore(0x24, subscriptionOrRegistrantToCopy)
+                    // Register into the registry.
+                    pop(call(gas(), registry, 0, 0x00, 0x44, 0x00, 0x00))
+                    // Restore the part of the free memory pointer that was overwritten,
+                    // which is guaranteed to be zero, because of Solidity's memory size limits.
+                    mstore(0x24, 0)
                     break
                 }
                 // Store the function selector of `registerAndSubscribe(address,address)`.
                 mstore(0x00, shl(224, 0x7d3e3dbe))
-                numCalldataBytes := 0x44
-                break
-            }
-
-            if numCalldataBytes {
                 // Store the `address(this)`.
                 mstore(0x04, address())
                 // Store the `subscriptionOrRegistrantToCopy`.
                 mstore(0x24, subscriptionOrRegistrantToCopy)
                 // Register into the registry.
-                pop(call(gas(), registry, 0, 0x00, numCalldataBytes, 0x00, 0x00))
+                pop(call(gas(), registry, 0, 0x00, 0x44, 0x00, 0x00))
                 // Restore the part of the free memory pointer that was overwritten,
                 // which is guaranteed to be zero, because of Solidity's memory size limits.
                 mstore(0x24, 0)
+                break
             }
         }
     }
