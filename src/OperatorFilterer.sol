@@ -71,11 +71,14 @@ abstract contract OperatorFilterer {
         /// @solidity memory-safe-assembly
         assembly {
             // prettier-ignore
-            for { let registry := _OPERATOR_FILTER_REGISTRY } filterEnabled {} {
+            for {} filterEnabled {} {
                 // Clean the upper 96 bits of `from` in case they are dirty.
                 from := shr(96, shl(96, from))
                 // prettier-ignore
                 if eq(from, caller()) { break }
+
+                let registry := _OPERATOR_FILTER_REGISTRY
+                
                 // prettier-ignore
                 if iszero(extcodesize(registry)) { break }
 
