@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.13;
+pragma solidity ^0.8.4;
 
 import {Test} from "forge-std/Test.sol";
 import {OperatorFilterRegistry, OperatorFilterRegistryErrorsAndEvents} from "operator-filter-registry/OperatorFilterRegistry.sol";
