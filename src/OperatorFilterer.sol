@@ -82,38 +82,40 @@ abstract contract OperatorFilterer {
                 // prettier-ignore
                 if iszero(extcodesize(registry)) { break }
 
-                // Store the function selector of `isOperatorAllowed(address,address)`.
-                mstore(0x00, shl(224, 0xc6171134))
+                // Store the function selector of `isOperatorAllowed(address,address)`,
+                // shifted left by 6 bytes, which is enough for 8tb of memory.
+                // We waste 6-3 = 3 bytes to save on 6 runtime gas (PUSH1 0x224 SHL).
+                mstore(0x00, 0xc6171134001122334455)
                 // Store the `address(this)`.
-                mstore(0x04, address())
+                mstore(0x1a, address())
                 // Store the `msg.sender`.
-                mstore(0x24, caller())
+                mstore(0x3a, caller())
 
-                if iszero(staticcall(gas(), registry, 0x00, 0x44, 0x24, 0x20)) {
+                if iszero(staticcall(gas(), registry, 0x16, 0x44, 0x3a, 0x20)) {
                     // Bubble up the revert if the staticcall reverts.
                     returndatacopy(0x00, 0x00, returndatasize())
                     revert(0x00, returndatasize())
                 }
 
-                if iszero(and(eq(mload(0x24), 1), eq(returndatasize(), 0x20))) {
+                if iszero(and(eq(mload(0x3a), 1), eq(returndatasize(), 0x20))) {
                     // Store the function selector of `OperatorNotAllowed(address)`.
                     mstore(0x00, 0xede71dcc)
                     // Store the `msg.sender`.
                     mstore(0x20, caller())
                     // Revert with (offset, size).
-                    revert(0x1c, 0x24)
+                    revert(0x1c, 0x36)
                 }
 
                 // Store the `from`.
-                mstore(0x24, from)
+                mstore(0x3a, from)
 
-                if iszero(staticcall(gas(), registry, 0x00, 0x44, 0x24, 0x20)) {
+                if iszero(staticcall(gas(), registry, 0x16, 0x44, 0x3a, 0x20)) {
                     // Bubble up the revert if the staticcall reverts.
                     returndatacopy(0x00, 0x00, returndatasize())
                     revert(0x00, returndatasize())
                 }
 
-                if iszero(and(eq(mload(0x24), 1), eq(returndatasize(), 0x20))) {
+                if iszero(and(eq(mload(0x3a), 1), eq(returndatasize(), 0x20))) {
                     // Store the function selector of `OperatorNotAllowed(address)`.
                     mstore(0x00, 0xede71dcc)
                     // Store the `msg.sender`.
@@ -124,7 +126,7 @@ abstract contract OperatorFilterer {
 
                 // Restore the part of the free memory pointer that was overwritten,
                 // which is guaranteed to be zero, because of Solidity's memory size limits.
-                mstore(0x24, 0)
+                mstore(0x3a, 0)
                 break
             }
         }
