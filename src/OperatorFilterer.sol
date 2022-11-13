@@ -7,9 +7,6 @@ pragma solidity ^0.8.4;
 /// For more information, see:
 /// See: https://github.com/ProjectOpenSea/operator-filter-registry
 abstract contract OperatorFilterer {
-    /// @dev Emitted when the caller is a blocked operator.
-    error OperatorNotAllowed(address operator);
-
     /// @dev The default OpenSea operator blocklist subscription.
     address internal constant _OPENSEA_DEFAULT_SUBSCRIPTION = 0x3cc6CddA760b79bAfa08dF41ECFA224f810dCeB6;
 
@@ -29,18 +26,16 @@ abstract contract OperatorFilterer {
         /// @solidity memory-safe-assembly
         assembly {
             let functionSelector := 0x7d3e3dbe // `registerAndSubscribe(address,address)`.
+
+            // Clean the upper 96 bits of `subscriptionOrRegistrantToCopy` in case they are dirty.
+            subscriptionOrRegistrantToCopy := shr(96, shl(96, subscriptionOrRegistrantToCopy))
             // prettier-ignore
-            for {} 1 {} {
-                // Clean the upper 96 bits of `subscriptionOrRegistrantToCopy` in case they are dirty.
-                subscriptionOrRegistrantToCopy := shr(96, shl(96, subscriptionOrRegistrantToCopy))
-                if iszero(subscribe) {
-                    if iszero(subscriptionOrRegistrantToCopy) {
-                        functionSelector := 0x4420e486 // `register(address)`.
-                        break
-                    }
-                    functionSelector := 0xa0af2903 // `registerAndCopyEntries(address,address)`.
+            for {} iszero(subscribe) {} {
+                if iszero(subscriptionOrRegistrantToCopy) {
+                    functionSelector := 0x4420e486 // `register(address)`.
                     break
                 }
+                functionSelector := 0xa0af2903 // `registerAndCopyEntries(address,address)`.
                 break
             }
             // Store the function selector.
@@ -62,6 +57,11 @@ abstract contract OperatorFilterer {
     modifier onlyAllowedOperator(address from, bool filterEnabled) virtual {
         /// @solidity memory-safe-assembly
         assembly {
+            // This code is prioritizes runtime gas costs on a network with the registry.
+            // As such, we will not use `extcodesize`, but rather abuse the behavior
+            // of `staticcall` returning 1 when called on an empty / missing contract,
+            // allowing us to pass through all the checks without reverting.
+
             // prettier-ignore
             for {} filterEnabled {} {
                 // Clean the upper 96 bits of `from` in case they are dirty.
@@ -78,6 +78,8 @@ abstract contract OperatorFilterer {
                 // Store the `address(this)`.
                 mstore(0x1a, address())
                 // Store the `msg.sender`.
+                // In practice, the caller will be more likely to be blocked,
+                // so we will test it first.
                 mstore(0x3a, caller())
 
                 // `isOperatorAllowed` always returns true if it does not revert.
