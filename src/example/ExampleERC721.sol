@@ -29,6 +29,11 @@ abstract contract ExampleERC721 is ERC721, OperatorFilterer, Ownable {
         address to,
         uint256 tokenId
     ) public override onlyAllowedOperator(from, operatorFilteringEnabled) {
+        assembly {
+            if iszero(eq(mload(0x40), 0x80)) {
+                revert(0, 0)
+            }
+        }
         super.transferFrom(from, to, tokenId);
     }
 
