@@ -73,9 +73,6 @@ abstract contract OperatorFilterer {
                 if eq(from, caller()) { break }
 
                 let registry := _OPERATOR_FILTER_REGISTRY
-                
-                // prettier-ignore
-                if iszero(extcodesize(registry)) { break }
 
                 // Store the function selector of `isOperatorAllowed(address,address)`,
                 // shifted left by 6 bytes, which is enough for 8tb of memory.
@@ -88,6 +85,10 @@ abstract contract OperatorFilterer {
 
                 // `isOperatorAllowed` always returns true if it does not revert.
                 if iszero(staticcall(gas(), registry, 0x16, 0x44, 0x3a, 0x20)) {
+                    // If it reverts, but if the registry is not deployed
+                    // -- just skip the check.
+                    // prettier-ignore
+                    if iszero(extcodesize(registry)) { break }
                     // Bubble up the revert if the staticcall reverts.
                     returndatacopy(0x00, 0x00, returndatasize())
                     revert(0x00, returndatasize())
