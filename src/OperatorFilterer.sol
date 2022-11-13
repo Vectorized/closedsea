@@ -81,7 +81,7 @@ abstract contract OperatorFilterer {
                 mstore(0x3a, caller())
 
                 // `isOperatorAllowed` always returns true if it does not revert.
-                if iszero(staticcall(gas(), registry, 0x16, 0x44, 0, 0)) {
+                if iszero(staticcall(gas(), registry, 0x16, 0x44, 0x00, 0x00)) {
                     // Bubble up the revert if the staticcall reverts.
                     returndatacopy(0x00, 0x00, returndatasize())
                     revert(0x00, returndatasize())
