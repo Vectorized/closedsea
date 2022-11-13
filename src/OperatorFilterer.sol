@@ -86,40 +86,21 @@ abstract contract OperatorFilterer {
                 // Store the `msg.sender`.
                 mstore(0x3a, caller())
 
+                // `isOperatorAllowed` always returns true if it does not revert.
                 if iszero(staticcall(gas(), registry, 0x16, 0x44, 0x3a, 0x20)) {
                     // Bubble up the revert if the staticcall reverts.
                     returndatacopy(0x00, 0x00, returndatasize())
                     revert(0x00, returndatasize())
-                }
-
-                // If the staticcall doesn't revert, we just have to check if the
-                // return data starts with `uint256(1)`. This is safe, as the
-                // registry is already deployed and non-upgradeable.
-                if iszero(mload(0x3a)) {
-                    // Store the function selector of `OperatorNotAllowed(address)`.
-                    mstore(0x00, 0xede71dcc)
-                    // Store the `msg.sender`.
-                    mstore(0x20, caller())
-                    // Revert with (offset, size).
-                    revert(0x1c, 0x36)
                 }
 
                 // Store the `from`.
                 mstore(0x3a, from)
 
+                // `isOperatorAllowed` always returns true if it does not revert.
                 if iszero(staticcall(gas(), registry, 0x16, 0x44, 0x3a, 0x20)) {
                     // Bubble up the revert if the staticcall reverts.
                     returndatacopy(0x00, 0x00, returndatasize())
                     revert(0x00, returndatasize())
-                }
-
-                if iszero(mload(0x3a)) {
-                    // Store the function selector of `OperatorNotAllowed(address)`.
-                    mstore(0x00, 0xede71dcc)
-                    // Store the `msg.sender`.
-                    mstore(0x20, caller())
-                    // Revert with (offset, size).
-                    revert(0x1c, 0x24)
                 }
 
                 // Restore the part of the free memory pointer that was overwritten,
