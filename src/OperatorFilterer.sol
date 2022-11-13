@@ -57,10 +57,10 @@ abstract contract OperatorFilterer {
     modifier onlyAllowedOperator(address from, bool filterEnabled) virtual {
         /// @solidity memory-safe-assembly
         assembly {
-            // This code is prioritizes runtime gas costs on a network with the registry.
+            // This code prioritizes runtime gas costs on a chain with the registry.
             // As such, we will not use `extcodesize`, but rather abuse the behavior
             // of `staticcall` returning 1 when called on an empty / missing contract,
-            // allowing us to pass through all the checks without reverting.
+            // to avoid reverting when a chain does not have the registry.
 
             // prettier-ignore
             for {} filterEnabled {} {
