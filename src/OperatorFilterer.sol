@@ -18,11 +18,13 @@ abstract contract OperatorFilterer {
 
     /// @dev Registers the current contract to OpenSea's operator filter,
     /// and subscribe to the default OpenSea operator blocklist.
+    /// Note: Will not revert nor update existing settings for repeated registration.
     function _registerForOperatorFiltering() internal {
         _registerForOperatorFiltering(_OPENSEA_DEFAULT_SUBSCRIPTION, true);
     }
 
     /// @dev Registers the current contract to OpenSea's operator filter.
+    /// Note: Will not revert nor update existing settings for repeated registration.
     function _registerForOperatorFiltering(address subscriptionOrRegistrantToCopy, bool subscribe) internal {
         /// @solidity memory-safe-assembly
         assembly {
@@ -90,7 +92,10 @@ abstract contract OperatorFilterer {
                     revert(0x00, returndatasize())
                 }
 
-                if iszero(and(eq(mload(0x3a), 1), eq(returndatasize(), 0x20))) {
+                // If the staticcall doesn't revert, we just have to check if the
+                // return data starts with `uint256(1)`. This is safe, as the
+                // registry is already deployed and non-upgradeable.
+                if iszero(mload(0x3a)) {
                     // Store the function selector of `OperatorNotAllowed(address)`.
                     mstore(0x00, 0xede71dcc)
                     // Store the `msg.sender`.
@@ -108,7 +113,7 @@ abstract contract OperatorFilterer {
                     revert(0x00, returndatasize())
                 }
 
-                if iszero(and(eq(mload(0x3a), 1), eq(returndatasize(), 0x20))) {
+                if iszero(mload(0x3a)) {
                     // Store the function selector of `OperatorNotAllowed(address)`.
                     mstore(0x00, 0xede71dcc)
                     // Store the `msg.sender`.
