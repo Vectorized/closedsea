@@ -28,20 +28,17 @@ abstract contract OperatorFilterer {
     function _registerForOperatorFiltering(address subscriptionOrRegistrantToCopy, bool subscribe) internal {
         /// @solidity memory-safe-assembly
         assembly {
-            // Selector of `registerAndSubscribe(address,address)`.
-            let functionSelector := 0x7d3e3dbe
+            let functionSelector := 0x7d3e3dbe // `registerAndSubscribe(address,address)`.
             // prettier-ignore
             for {} 1 {} {
                 // Clean the upper 96 bits of `subscriptionOrRegistrantToCopy` in case they are dirty.
                 subscriptionOrRegistrantToCopy := shr(96, shl(96, subscriptionOrRegistrantToCopy))
                 if iszero(subscribe) {
                     if iszero(subscriptionOrRegistrantToCopy) {
-                        // Selector of `register(address)`.
-                        functionSelector := 0x4420e486
+                        functionSelector := 0x4420e486 // `register(address)`.
                         break
                     }
-                    // Selector of `registerAndCopyEntries(address,address)`.
-                    functionSelector := 0xa0af2903
+                    functionSelector := 0xa0af2903 // `registerAndCopyEntries(address,address)`.
                     break
                 }
                 break
