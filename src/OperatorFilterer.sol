@@ -18,40 +18,39 @@ abstract contract OperatorFilterer {
 
     /// @dev Registers the current contract to OpenSea's operator filter,
     /// and subscribe to the default OpenSea operator blocklist.
+    /// Note: Will not revert nor update existing settings for repeated registration.
     function _registerForOperatorFiltering() internal {
         _registerForOperatorFiltering(_OPENSEA_DEFAULT_SUBSCRIPTION, true);
     }
 
     /// @dev Registers the current contract to OpenSea's operator filter.
+    /// Note: Will not revert nor update existing settings for repeated registration.
     function _registerForOperatorFiltering(address subscriptionOrRegistrantToCopy, bool subscribe) internal {
         /// @solidity memory-safe-assembly
         assembly {
-            let registry := _OPERATOR_FILTER_REGISTRY
+            let functionSelector := 0x7d3e3dbe // `registerAndSubscribe(address,address)`.
             // prettier-ignore
             for {} 1 {} {
                 // Clean the upper 96 bits of `subscriptionOrRegistrantToCopy` in case they are dirty.
                 subscriptionOrRegistrantToCopy := shr(96, shl(96, subscriptionOrRegistrantToCopy))
                 if iszero(subscribe) {
                     if iszero(subscriptionOrRegistrantToCopy) {
-                        // Store the function selector of `register(address)`.
-                        mstore(0x00, shl(224, 0x4420e486))
+                        functionSelector := 0x4420e486 // `register(address)`.
                         break
                     }
-                    // Store the function selector of `registerAndCopyEntries(address,address)`.
-                    mstore(0x00, shl(224, 0xa0af2903))
+                    functionSelector := 0xa0af2903 // `registerAndCopyEntries(address,address)`.
                     break
                 }
-                // Store the function selector of `registerAndSubscribe(address,address)`.
-                mstore(0x00, shl(224, 0x7d3e3dbe))
                 break
             }
-
+            // Store the function selector.
+            mstore(0x00, shl(224, functionSelector))
             // Store the `address(this)`.
             mstore(0x04, address())
             // Store the `subscriptionOrRegistrantToCopy`.
             mstore(0x24, subscriptionOrRegistrantToCopy)
             // Register into the registry.
-            pop(call(gas(), registry, 0, 0x00, 0x44, 0x00, 0x00))
+            pop(call(gas(), _OPERATOR_FILTER_REGISTRY, 0, 0x00, 0x44, 0x00, 0x00))
             // Restore the part of the free memory pointer that was overwritten,
             // which is guaranteed to be zero, because of Solidity's memory size limits.
             mstore(0x24, 0)
@@ -71,9 +70,6 @@ abstract contract OperatorFilterer {
                 if eq(from, caller()) { break }
 
                 let registry := _OPERATOR_FILTER_REGISTRY
-                
-                // prettier-ignore
-                if iszero(extcodesize(registry)) { break }
 
                 // Store the function selector of `isOperatorAllowed(address,address)`,
                 // shifted left by 6 bytes, which is enough for 8tb of memory.
@@ -84,37 +80,23 @@ abstract contract OperatorFilterer {
                 // Store the `msg.sender`.
                 mstore(0x3a, caller())
 
-                if iszero(staticcall(gas(), registry, 0x16, 0x44, 0x3a, 0x20)) {
+                // `isOperatorAllowed` always returns true if it does not revert.
+                if iszero(staticcall(gas(), registry, 0x16, 0x44, 0, 0)) {
                     // Bubble up the revert if the staticcall reverts.
                     returndatacopy(0x00, 0x00, returndatasize())
                     revert(0x00, returndatasize())
-                }
-
-                if iszero(and(eq(mload(0x3a), 1), eq(returndatasize(), 0x20))) {
-                    // Store the function selector of `OperatorNotAllowed(address)`.
-                    mstore(0x00, 0xede71dcc)
-                    // Store the `msg.sender`.
-                    mstore(0x20, caller())
-                    // Revert with (offset, size).
-                    revert(0x1c, 0x36)
                 }
 
                 // Store the `from`.
                 mstore(0x3a, from)
 
-                if iszero(staticcall(gas(), registry, 0x16, 0x44, 0x3a, 0x20)) {
+                // We abuse `returndatasize` here to save 1 gas over PUSH1 0x00.
+                // `returndatasize` will be 0x00 if the contract is not deployed,
+                // and 0x20 if deployed.
+                if iszero(staticcall(gas(), registry, 0x16, 0x44, returndatasize(), returndatasize())) {
                     // Bubble up the revert if the staticcall reverts.
                     returndatacopy(0x00, 0x00, returndatasize())
                     revert(0x00, returndatasize())
-                }
-
-                if iszero(and(eq(mload(0x3a), 1), eq(returndatasize(), 0x20))) {
-                    // Store the function selector of `OperatorNotAllowed(address)`.
-                    mstore(0x00, 0xede71dcc)
-                    // Store the `msg.sender`.
-                    mstore(0x20, caller())
-                    // Revert with (offset, size).
-                    revert(0x1c, 0x24)
                 }
 
                 // Restore the part of the free memory pointer that was overwritten,
