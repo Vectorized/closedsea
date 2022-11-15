@@ -17,11 +17,9 @@ contract OperatorFiltererTest is BaseRegistryTest {
     address filteredAddress;
     address filteredCodeHashAddress;
     bytes32 filteredCodeHash;
-    address notFiltered;
 
     function setUp() public override {
         super.setUp();
-        notFiltered = makeAddr("not filtered");
         filterer = new Filterer();
         filteredAddress = makeAddr("filtered address");
         registry.updateOperator(address(filterer), filteredAddress, true);
@@ -33,11 +31,13 @@ contract OperatorFiltererTest is BaseRegistryTest {
     }
 
     function testFilter() public {
-        assertTrue(filterer.testFilter(notFiltered));
+        assertTrue(filterer.testFilter(address(this)));
         vm.expectRevert(abi.encodeWithSelector(AddressFiltered.selector, filteredAddress));
-        filterer.testFilter(filteredAddress);
+        vm.prank(filteredAddress);
+        filterer.testFilter(address(this));
         vm.expectRevert(abi.encodeWithSelector(CodeHashFiltered.selector, filteredCodeHashAddress, filteredCodeHash));
-        filterer.testFilter(filteredCodeHashAddress);
+        vm.prank(filteredCodeHashAddress);
+        filterer.testFilter(address(this));
     }
 
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
@@ -82,7 +82,7 @@ contract OperatorFiltererTest is BaseRegistryTest {
     function testRegistryNotDeployedDoesNotRevert() public {
         vm.etch(address(registry), "");
         Filterer filterer2 = new Filterer();
-        assertTrue(filterer2.testFilter(notFiltered));
+        assertTrue(filterer2.testFilter(address(this)));
     }
 
     function testRegisterNonExistentRegistryDoesNotRevert() public {
