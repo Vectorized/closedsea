@@ -53,10 +53,10 @@ abstract contract OperatorFilterer {
     }
 
     /// @dev Modifier to guard a function and revert if `from` is a blocked operator.
-    /// Can be turned on / off via `filterEnabled`.
+    /// Can be turned on / off via `enabled`.
     /// For gas efficiency, you can use tight variable packing to efficiently read / write
-    /// the boolean value for `filterEnabled`.
-    modifier onlyAllowedOperator(address from, bool filterEnabled) virtual {
+    /// the boolean value for `enabled`.
+    modifier onlyAllowedOperator(address from, bool enabled) virtual {
         /// @solidity memory-safe-assembly
         assembly {
             // This code prioritizes runtime gas costs on a chain with the registry.
@@ -64,7 +64,7 @@ abstract contract OperatorFilterer {
             // of `staticcall` returning 1 when called on an empty / missing contract,
             // to avoid reverting when a chain does not have the registry.
 
-            if filterEnabled {
+            if enabled {
                 // Check if `from` is not equal to `msg.sender`,
                 // discarding the upper 96 bits of `from` in case they are dirty.
                 if iszero(eq(shr(96, shl(96, from)), caller())) {
@@ -98,16 +98,16 @@ abstract contract OperatorFilterer {
     }
 
     /// @dev Modifier to guard a function from approving a blocked operator.
-    /// Can be turned on / off via `filterEnabled`.
+    /// Can be turned on / off via `enabled`.
     /// For efficiency, you can use tight variable packing to efficiently read / write
-    /// the boolean value for `filterEnabled`.
-    modifier onlyAllowedOperatorApproval(address operator, bool filterEnabled) virtual {
+    /// the boolean value for `enabled`.
+    modifier onlyAllowedOperatorApproval(address operator, bool enabled) virtual {
         /// @solidity memory-safe-assembly
         assembly {
             // For more information on the optimization techniques used,
             // see the comments in `onlyAllowedOperator`.
 
-            if filterEnabled {
+            if enabled {
                 // Store the function selector of `isOperatorAllowed(address,address)`,
                 mstore(0x00, 0xc6171134001122334455)
                 // Store the `address(this)`.
