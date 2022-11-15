@@ -19,7 +19,11 @@ abstract contract ExampleERC721Upgradeable is ERC721Upgradeable, OperatorFiltere
         _registerForOperatorFiltering();
     }
 
-    function setApprovalForAll(address operator, bool approved) public override onlyAllowedOperatorApproval(operator, true) {
+    function setApprovalForAll(address operator, bool approved)
+        public
+        override
+        onlyAllowedOperatorApproval(operator, true)
+    {
         super.setApprovalForAll(operator, approved);
     }
 

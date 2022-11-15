@@ -19,7 +19,11 @@ abstract contract ExampleERC1155Upgradeable is ERC1155Upgradeable, OperatorFilte
         _registerForOperatorFiltering();
     }
 
-    function setApprovalForAll(address operator, bool approved) public override onlyAllowedOperatorApproval(operator, true) {
+    function setApprovalForAll(address operator, bool approved)
+        public
+        override
+        onlyAllowedOperatorApproval(operator, true)
+    {
         super.setApprovalForAll(operator, approved);
     }
 

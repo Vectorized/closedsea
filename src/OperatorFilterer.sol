@@ -63,8 +63,8 @@ abstract contract OperatorFilterer {
             // to avoid reverting when a chain does not have the registry.
 
             if filterEnabled {
-                // Check if `from` is not equal to `msg.sender`, discarding the upper
-                // 96 bits of `from` in case they are dirty.
+                // Check if `from` is not equal to `msg.sender`,
+                // discarding the upper 96 bits of `from` in case they are dirty.
                 if iszero(eq(shr(96, shl(96, from)), caller())) {
                     // Store the function selector of `isOperatorAllowed(address,address)`,
                     // shifted left by 6 bytes, which is enough for 8tb of memory.
@@ -107,8 +107,8 @@ abstract contract OperatorFilterer {
                 mstore(0x00, 0xc6171134001122334455)
                 // Store the `address(this)`.
                 mstore(0x1a, address())
-                // Store the `operator`.
-                mstore(0x3a, operator)
+                // Store the `operator`, discarding the upper 96 bits in case they are dirty.
+                mstore(0x3a, shr(96, shl(96, operator)))
 
                 // `isOperatorAllowed` always returns true if it does not revert.
                 if iszero(staticcall(gas(), _OPERATOR_FILTER_REGISTRY, 0x16, 0x44, 0x00, 0x00)) {
