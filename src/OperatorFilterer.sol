@@ -100,10 +100,10 @@ abstract contract OperatorFilterer {
     modifier onlyAllowedOperatorApproval(address operator, bool filterEnabled) virtual {
         /// @solidity memory-safe-assembly
         assembly {
+            // For more information, see the comments in `onlyAllowedOperator`.
+
             if filterEnabled {
                 // Store the function selector of `isOperatorAllowed(address,address)`,
-                // shifted left by 6 bytes, which is enough for 8tb of memory.
-                // We waste 6-3 = 3 bytes to save on 6 runtime gas (PUSH1 0x224 SHL).
                 mstore(0x00, 0xc6171134001122334455)
                 // Store the `address(this)`.
                 mstore(0x1a, address())
@@ -117,12 +117,7 @@ abstract contract OperatorFilterer {
                     revert(0x00, returndatasize())
                 }
 
-                // We'll skip checking if `from` is inside the blacklist.
-                // Even though that can block transferring out of wrapper contracts,
-                // we don't want tokens to be stuck.
-
-                // Restore the part of the free memory pointer that was overwritten,
-                // which is guaranteed to be zero, if less than 8tb of memory is used.
+                // Restore the part of the free memory pointer that was overwritten.
                 mstore(0x3a, 0)
             }
         }
