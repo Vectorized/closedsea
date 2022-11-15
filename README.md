@@ -63,9 +63,9 @@ modifier onlyAllowedOperator(address from, bool filterEnabled) virtual
 ```  
 Modifier to guard a function and revert if `from` is a blocked operator.  
 
-Can be turned on or off by via `filterEnabled`. 
+Can be turned on / off via `filterEnabled`.
 
-For efficiency, you can use tight variable packing to efficiently store the boolean value for `filterEnabled`.
+For efficiency, you can use tight variable packing to efficiently read / write the boolean value for `filterEnabled`.
 
 ### `onlyAllowedOperatorApproval`
 ```solidity
@@ -73,9 +73,9 @@ modifier onlyAllowedOperatorApproval(address operator, bool filterEnabled) virtu
 ```  
 Modifier to guard a function from approving a blocked operator.  
 
-Can be turned on or off by via `filterEnabled`.
+Can be turned on / off via `filterEnabled`.
 
-For efficiency, you can use tight variable packing to efficiently store the boolean value for `filterEnabled`.
+For efficiency, you can use tight variable packing to efficiently read / write the boolean value for `filterEnabled`.
 
 ## Safety
 

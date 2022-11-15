@@ -16,13 +16,13 @@ abstract contract OperatorFilterer {
     /// @dev Registers the current contract to OpenSea's operator filter,
     /// and subscribe to the default OpenSea operator blocklist.
     /// Note: Will not revert nor update existing settings for repeated registration.
-    function _registerForOperatorFiltering() internal {
+    function _registerForOperatorFiltering() internal virtual {
         _registerForOperatorFiltering(_DEFAULT_SUBSCRIPTION, true);
     }
 
     /// @dev Registers the current contract to OpenSea's operator filter.
     /// Note: Will not revert nor update existing settings for repeated registration.
-    function _registerForOperatorFiltering(address subscriptionOrRegistrantToCopy, bool subscribe) internal {
+    function _registerForOperatorFiltering(address subscriptionOrRegistrantToCopy, bool subscribe) internal virtual {
         /// @solidity memory-safe-assembly
         assembly {
             let functionSelector := 0x7d3e3dbe // `registerAndSubscribe(address,address)`.
@@ -53,7 +53,9 @@ abstract contract OperatorFilterer {
     }
 
     /// @dev Modifier to guard a function and revert if `from` is a blocked operator.
-    /// Can be turned off by via `filterEnabled`.
+    /// Can be turned on / off via `filterEnabled`.
+    /// For gas efficiency, you can use tight variable packing to efficiently read / write
+    /// the boolean value for `filterEnabled`.
     modifier onlyAllowedOperator(address from, bool filterEnabled) virtual {
         /// @solidity memory-safe-assembly
         assembly {
@@ -96,7 +98,9 @@ abstract contract OperatorFilterer {
     }
 
     /// @dev Modifier to guard a function from approving a blocked operator.
-    /// Can be turned off by via `filterEnabled`.
+    /// Can be turned on / off via `filterEnabled`.
+    /// For efficiency, you can use tight variable packing to efficiently read / write
+    /// the boolean value for `filterEnabled`.
     modifier onlyAllowedOperatorApproval(address operator, bool filterEnabled) virtual {
         /// @solidity memory-safe-assembly
         assembly {
