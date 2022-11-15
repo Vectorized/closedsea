@@ -100,7 +100,8 @@ abstract contract OperatorFilterer {
     modifier onlyAllowedOperatorApproval(address operator, bool filterEnabled) virtual {
         /// @solidity memory-safe-assembly
         assembly {
-            // For more information, see the comments in `onlyAllowedOperator`.
+            // For more information on the optimization techniques used,
+            // see the comments in `onlyAllowedOperator`.
 
             if filterEnabled {
                 // Store the function selector of `isOperatorAllowed(address,address)`,
