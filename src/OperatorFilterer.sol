@@ -53,7 +53,7 @@ abstract contract OperatorFilterer {
     }
 
     /// @dev Modifier to guard a function and revert if `from` is a blocked operator.
-    /// Can be turned off by passing false for `filterEnabled`.
+    /// Can be turned off by via `filterEnabled`.
     modifier onlyAllowedOperator(address from, bool filterEnabled) virtual {
         /// @solidity memory-safe-assembly
         assembly {
@@ -90,6 +90,40 @@ abstract contract OperatorFilterer {
                     // which is guaranteed to be zero, if less than 8tb of memory is used.
                     mstore(0x3a, 0)
                 }
+            }
+        }
+        _;
+    }
+
+    /// @dev Modifier to guard a function from approving a blocked operator.
+    /// Can be turned off by via `filterEnabled`.
+    modifier onlyAllowedOperatorApproval(address operator, bool filterEnabled) virtual {
+        /// @solidity memory-safe-assembly
+        assembly {
+            if filterEnabled {
+                // Store the function selector of `isOperatorAllowed(address,address)`,
+                // shifted left by 6 bytes, which is enough for 8tb of memory.
+                // We waste 6-3 = 3 bytes to save on 6 runtime gas (PUSH1 0x224 SHL).
+                mstore(0x00, 0xc6171134001122334455)
+                // Store the `address(this)`.
+                mstore(0x1a, address())
+                // Store the `operator`.
+                mstore(0x3a, operator)
+
+                // `isOperatorAllowed` always returns true if it does not revert.
+                if iszero(staticcall(gas(), _OPERATOR_FILTER_REGISTRY, 0x16, 0x44, 0x00, 0x00)) {
+                    // Bubble up the revert if the staticcall reverts.
+                    returndatacopy(0x00, 0x00, returndatasize())
+                    revert(0x00, returndatasize())
+                }
+
+                // We'll skip checking if `from` is inside the blacklist.
+                // Even though that can block transferring out of wrapper contracts,
+                // we don't want tokens to be stuck.
+
+                // Restore the part of the free memory pointer that was overwritten,
+                // which is guaranteed to be zero, if less than 8tb of memory is used.
+                mstore(0x3a, 0)
             }
         }
         _;

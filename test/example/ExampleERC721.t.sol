@@ -65,12 +65,11 @@ contract ExampleERC721Test is BaseRegistryTest {
         address alice = address(0xA11CE);
         address bob = address(0xB0B);
         example.mint(bob, 1);
+        vm.prank(bob);
+        example.setApprovalForAll(alice, true);
 
         vm.prank(DEFAULT_SUBSCRIPTION);
         registry.updateOperator(address(DEFAULT_SUBSCRIPTION), alice, true);
-
-        vm.prank(bob);
-        example.setApprovalForAll(alice, true);
 
         vm.startPrank(alice);
         vm.expectRevert(abi.encodeWithSelector(AddressFiltered.selector, alice));
@@ -81,10 +80,11 @@ contract ExampleERC721Test is BaseRegistryTest {
         uint256 randomness = uint256(keccak256(abi.encode(123)));
         address alice = address(0xA11CE);
         address to = makeAddr("to");
+        example.setOperatorFilteringEnabled(false);
         vm.prank(alice);
         example.setApprovalForAll(address(filteredAddress), true);
 
-        for (uint256 i = 0; i < 256; ++i) {
+        for (uint256 i = 0; i < 128; ++i) {
             example.mint(alice, i);
             bool enabled = randomness & 1 == 0;
             vm.prank(example.owner());
@@ -96,6 +96,19 @@ contract ExampleERC721Test is BaseRegistryTest {
             }
             example.transferFrom(alice, to, i);
 
+            randomness = randomness >> 1;
+        }
+
+        for (uint256 i = 0; i < 128; ++i) {
+            bool enabled = randomness & 1 == 0;
+            vm.prank(example.owner());
+            example.setOperatorFilteringEnabled(enabled);
+
+            vm.prank(alice);
+            if (enabled) {
+                vm.expectRevert(abi.encodeWithSelector(AddressFiltered.selector, filteredAddress));
+            }
+            example.setApprovalForAll(address(filteredAddress), true);
             randomness = randomness >> 1;
         }
     }
