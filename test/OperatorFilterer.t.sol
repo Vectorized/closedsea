@@ -17,9 +17,11 @@ contract OperatorFiltererTest is BaseRegistryTest {
     address filteredAddress;
     address filteredCodeHashAddress;
     bytes32 filteredCodeHash;
+    address notFiltered;
 
     function setUp() public override {
         super.setUp();
+        notFiltered = makeAddr("not filtered");
         filterer = new Filterer();
         filteredAddress = makeAddr("filtered address");
         registry.updateOperator(address(filterer), filteredAddress, true);
@@ -30,18 +32,30 @@ contract OperatorFiltererTest is BaseRegistryTest {
         vm.etch(filteredCodeHashAddress, code);
     }
 
-    function testFilterGas() public view {
-        filterer.testFilter(address(this));
+    function testFilterWithMsgSenderGas() public view {
+        filterer.filter(address(this));
+    }
+
+    function testFilterWithMsgSenderOriginalGas() public view {
+        filterer.filterOriginal(address(this));
+    }
+
+    function testFilterWithOperatorGas() public view {
+        filterer.filter(notFiltered);
+    }
+
+    function testFilterWithOperatorOriginalGas() public view {
+        filterer.filterOriginal(notFiltered);
     }
 
     function testFilter() public {
-        assertTrue(filterer.testFilter(address(this)));
+        assertTrue(filterer.filter(notFiltered));
         vm.expectRevert(abi.encodeWithSelector(AddressFiltered.selector, filteredAddress));
         vm.prank(filteredAddress);
-        filterer.testFilter(address(this));
+        filterer.filter(notFiltered);
         vm.expectRevert(abi.encodeWithSelector(CodeHashFiltered.selector, filteredCodeHashAddress, filteredCodeHash));
         vm.prank(filteredCodeHashAddress);
-        filterer.testFilter(address(this));
+        filterer.filter(notFiltered);
     }
 
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
@@ -86,7 +100,7 @@ contract OperatorFiltererTest is BaseRegistryTest {
     function testRegistryNotDeployedDoesNotRevert() public {
         vm.etch(address(registry), "");
         Filterer filterer2 = new Filterer();
-        assertTrue(filterer2.testFilter(address(this)));
+        assertTrue(filterer2.filter(address(this)));
     }
 
     function testRegisterNonExistentRegistryDoesNotRevert() public {

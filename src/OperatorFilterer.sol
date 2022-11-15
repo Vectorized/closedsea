@@ -63,12 +63,9 @@ abstract contract OperatorFilterer {
             // to avoid reverting when a chain does not have the registry.
 
             if filterEnabled {
-                // Clean the upper 96 bits of `from` in case they are dirty.
-                from := shr(96, shl(96, from))
-
-                if iszero(eq(from, caller())) {
-                    let registry := _OPERATOR_FILTER_REGISTRY
-
+                // Check if `from` is not equal to `msg.sender`, discarding the upper
+                // 96 bits of `from` in case they are dirty.
+                if iszero(eq(shr(96, shl(96, from)), caller())) {
                     // Store the function selector of `isOperatorAllowed(address,address)`,
                     // shifted left by 6 bytes, which is enough for 8tb of memory.
                     // We waste 6-3 = 3 bytes to save on 6 runtime gas (PUSH1 0x224 SHL).
@@ -79,7 +76,7 @@ abstract contract OperatorFilterer {
                     mstore(0x3a, caller())
 
                     // `isOperatorAllowed` always returns true if it does not revert.
-                    if iszero(staticcall(gas(), registry, 0x16, 0x44, 0x00, 0x00)) {
+                    if iszero(staticcall(gas(), _OPERATOR_FILTER_REGISTRY, 0x16, 0x44, 0x00, 0x00)) {
                         // Bubble up the revert if the staticcall reverts.
                         returndatacopy(0x00, 0x00, returndatasize())
                         revert(0x00, returndatasize())

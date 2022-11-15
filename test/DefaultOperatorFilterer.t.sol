@@ -10,10 +10,12 @@ contract DefaultOperatorFiltererTest is BaseRegistryTest {
     address filteredAddress;
     address filteredCodeHashAddress;
     bytes32 filteredCodeHash;
+    address notFiltered;
     address constant DEFAULT_SUBSCRIPTION = address(0x3cc6CddA760b79bAfa08dF41ECFA224f810dCeB6);
 
     function setUp() public override {
         super.setUp();
+        notFiltered = makeAddr("not filtered");
         vm.startPrank(DEFAULT_SUBSCRIPTION);
         registry.register(DEFAULT_SUBSCRIPTION);
 
@@ -29,17 +31,13 @@ contract DefaultOperatorFiltererTest is BaseRegistryTest {
         vm.stopPrank();
     }
 
-    function testFilterGas() public view {
-        filterer.filterTest(address(this));
-    }
-
     function testFilter() public {
-        assertTrue(filterer.filterTest(address(this)));
+        assertTrue(filterer.filter(notFiltered));
         vm.expectRevert(abi.encodeWithSelector(AddressFiltered.selector, filteredAddress));
         vm.prank(filteredAddress);
-        filterer.filterTest(address(this));
+        filterer.filter(notFiltered);
         vm.expectRevert(abi.encodeWithSelector(CodeHashFiltered.selector, filteredCodeHashAddress, filteredCodeHash));
         vm.prank(filteredCodeHashAddress);
-        filterer.filterTest(address(this));
+        filterer.filter(notFiltered);
     }
 }
