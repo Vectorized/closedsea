@@ -8,7 +8,7 @@ Gas optimized and flexible version of OpenSea's Mandatory Operator Filterer for 
 
 ## Features
 
-- Modifiers can be toggled on or off efficiently.
+- Modifiers can be toggled on / off efficiently.
 
 - Gas optimized. Saves 1500+ gas on transfers.
 
