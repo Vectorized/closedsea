@@ -10,9 +10,21 @@ contract Filterer is OperatorFilterer, Ownable {
 
     constructor() {
         _registerForOperatorFiltering(address(0), false);
+        /// @solidity memory-safe-assembly
+        assembly {
+            if iszero(eq(mload(0x40), 0x80)) {
+                revert(0, 0)
+            }
+        }
     }
 
     function filter(address from) public view onlyAllowedOperator(from, true) returns (bool) {
+        /// @solidity memory-safe-assembly
+        assembly {
+            if iszero(eq(mload(0x40), 0x80)) {
+                revert(0, 0)
+            }
+        }
         return true;
     }
 
