@@ -49,7 +49,10 @@ See [`src/example/ExampleERC721.sol`](./src/example/ExampleERC721.sol).
 
 ### `_registerForOperatorFiltering`
 ```solidity 
-function _registerForOperatorFiltering(address subscriptionOrRegistrantToCopy, bool subscribe) internal
+function _registerForOperatorFiltering(
+	address subscriptionOrRegistrantToCopy, 
+	bool subscribe
+) internal
 ````
 Registration function that can be called in an initializer, anywhere.  
 
