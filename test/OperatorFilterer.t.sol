@@ -32,12 +32,30 @@ contract OperatorFiltererTest is BaseRegistryTest {
         vm.etch(filteredCodeHashAddress, code);
     }
 
+    function testFilterWithMsgSenderGas() public view {
+        filterer.filter(address(this));
+    }
+
+    function testFilterWithMsgSenderOriginalGas() public view {
+        filterer.filterOriginal(address(this));
+    }
+
+    function testFilterWithOperatorGas() public view {
+        filterer.filter(notFiltered);
+    }
+
+    function testFilterWithOperatorOriginalGas() public view {
+        filterer.filterOriginal(notFiltered);
+    }
+
     function testFilter() public {
-        assertTrue(filterer.testFilter(notFiltered));
+        assertTrue(filterer.filter(notFiltered));
         vm.expectRevert(abi.encodeWithSelector(AddressFiltered.selector, filteredAddress));
-        filterer.testFilter(filteredAddress);
+        vm.prank(filteredAddress);
+        filterer.filter(notFiltered);
         vm.expectRevert(abi.encodeWithSelector(CodeHashFiltered.selector, filteredCodeHashAddress, filteredCodeHash));
-        filterer.testFilter(filteredCodeHashAddress);
+        vm.prank(filteredCodeHashAddress);
+        filterer.filter(notFiltered);
     }
 
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
@@ -82,7 +100,7 @@ contract OperatorFiltererTest is BaseRegistryTest {
     function testRegistryNotDeployedDoesNotRevert() public {
         vm.etch(address(registry), "");
         Filterer filterer2 = new Filterer();
-        assertTrue(filterer2.testFilter(notFiltered));
+        assertTrue(filterer2.filter(address(this)));
     }
 
     function testRegisterNonExistentRegistryDoesNotRevert() public {

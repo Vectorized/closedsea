@@ -8,7 +8,7 @@ pragma solidity ^0.8.4;
 /// See: https://github.com/ProjectOpenSea/operator-filter-registry
 abstract contract OperatorFilterer {
     /// @dev The default OpenSea operator blocklist subscription.
-    address internal constant _OPENSEA_DEFAULT_SUBSCRIPTION = 0x3cc6CddA760b79bAfa08dF41ECFA224f810dCeB6;
+    address internal constant _DEFAULT_SUBSCRIPTION = 0x3cc6CddA760b79bAfa08dF41ECFA224f810dCeB6;
 
     /// @dev The OpenSea operator filter registry.
     address internal constant _OPERATOR_FILTER_REGISTRY = 0x000000000000AAeB6D7670E522A718067333cd4E;
@@ -17,7 +17,7 @@ abstract contract OperatorFilterer {
     /// and subscribe to the default OpenSea operator blocklist.
     /// Note: Will not revert nor update existing settings for repeated registration.
     function _registerForOperatorFiltering() internal {
-        _registerForOperatorFiltering(_OPENSEA_DEFAULT_SUBSCRIPTION, true);
+        _registerForOperatorFiltering(_DEFAULT_SUBSCRIPTION, true);
     }
 
     /// @dev Registers the current contract to OpenSea's operator filter.
@@ -62,49 +62,34 @@ abstract contract OperatorFilterer {
             // of `staticcall` returning 1 when called on an empty / missing contract,
             // to avoid reverting when a chain does not have the registry.
 
-            // prettier-ignore
-            for {} filterEnabled {} {
-                // Clean the upper 96 bits of `from` in case they are dirty.
-                from := shr(96, shl(96, from))
-                // prettier-ignore
-                if eq(from, caller()) { break }
+            if filterEnabled {
+                // Check if `from` is not equal to `msg.sender`, discarding the upper
+                // 96 bits of `from` in case they are dirty.
+                if iszero(eq(shr(96, shl(96, from)), caller())) {
+                    // Store the function selector of `isOperatorAllowed(address,address)`,
+                    // shifted left by 6 bytes, which is enough for 8tb of memory.
+                    // We waste 6-3 = 3 bytes to save on 6 runtime gas (PUSH1 0x224 SHL).
+                    mstore(0x00, 0xc6171134001122334455)
+                    // Store the `address(this)`.
+                    mstore(0x1a, address())
+                    // Store the `msg.sender`.
+                    mstore(0x3a, caller())
 
-                let registry := _OPERATOR_FILTER_REGISTRY
+                    // `isOperatorAllowed` always returns true if it does not revert.
+                    if iszero(staticcall(gas(), _OPERATOR_FILTER_REGISTRY, 0x16, 0x44, 0x00, 0x00)) {
+                        // Bubble up the revert if the staticcall reverts.
+                        returndatacopy(0x00, 0x00, returndatasize())
+                        revert(0x00, returndatasize())
+                    }
 
-                // Store the function selector of `isOperatorAllowed(address,address)`,
-                // shifted left by 6 bytes, which is enough for 8tb of memory.
-                // We waste 6-3 = 3 bytes to save on 6 runtime gas (PUSH1 0x224 SHL).
-                mstore(0x00, 0xc6171134001122334455)
-                // Store the `address(this)`.
-                mstore(0x1a, address())
-                // Store the `msg.sender`.
-                // In practice, the caller will be more likely to be blocked,
-                // so we will test it first.
-                mstore(0x3a, caller())
+                    // We'll skip checking if `from` is inside the blacklist.
+                    // Even though that can block transferring out of wrapper contracts,
+                    // we don't want tokens to be stuck.
 
-                // `isOperatorAllowed` always returns true if it does not revert.
-                if iszero(staticcall(gas(), registry, 0x16, 0x44, 0x00, 0x00)) {
-                    // Bubble up the revert if the staticcall reverts.
-                    returndatacopy(0x00, 0x00, returndatasize())
-                    revert(0x00, returndatasize())
+                    // Restore the part of the free memory pointer that was overwritten,
+                    // which is guaranteed to be zero, if less than 8tb of memory is used.
+                    mstore(0x3a, 0)
                 }
-
-                // Store the `from`.
-                mstore(0x3a, from)
-
-                // We abuse `returndatasize` here to save 1 gas over PUSH1 0x00.
-                // `returndatasize` will be 0x00 if the contract is not deployed,
-                // and 0x20 if deployed.
-                if iszero(staticcall(gas(), registry, 0x16, 0x44, returndatasize(), returndatasize())) {
-                    // Bubble up the revert if the staticcall reverts.
-                    returndatacopy(0x00, 0x00, returndatasize())
-                    revert(0x00, returndatasize())
-                }
-
-                // Restore the part of the free memory pointer that was overwritten,
-                // which is guaranteed to be zero, if less than 8tb of memory is used.
-                mstore(0x3a, 0)
-                break
             }
         }
         _;
