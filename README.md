@@ -58,7 +58,7 @@ Registration function that can be called in an initializer, anywhere.
 
 Can be called repeatedly without issues.
 
-To subscribe to the [default OpenSea Curated block list](https://github.com/ProjectOpenSea/operator-filter-registry/#deployments), simply use `_registerForOperatorFiltering()`, without arguments.
+To subscribe to the [default OpenSea curated block list](https://github.com/ProjectOpenSea/operator-filter-registry/#deployments), simply use `_registerForOperatorFiltering()`, without arguments.
 
 ### `onlyAllowedOperator`
 ```solidity
