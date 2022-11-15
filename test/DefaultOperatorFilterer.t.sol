@@ -29,6 +29,10 @@ contract DefaultOperatorFiltererTest is BaseRegistryTest {
         vm.stopPrank();
     }
 
+    function testFilterGas() public view {
+        filterer.filterTest(address(this));
+    }
+
     function testFilter() public {
         assertTrue(filterer.filterTest(address(this)));
         vm.expectRevert(abi.encodeWithSelector(AddressFiltered.selector, filteredAddress));

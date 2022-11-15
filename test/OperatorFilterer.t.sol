@@ -30,6 +30,10 @@ contract OperatorFiltererTest is BaseRegistryTest {
         vm.etch(filteredCodeHashAddress, code);
     }
 
+    function testFilterGas() public view {
+        filterer.testFilter(address(this));
+    }
+
     function testFilter() public {
         assertTrue(filterer.testFilter(address(this)));
         vm.expectRevert(abi.encodeWithSelector(AddressFiltered.selector, filteredAddress));
