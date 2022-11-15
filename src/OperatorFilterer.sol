@@ -88,7 +88,6 @@ abstract contract OperatorFilterer {
                     // We'll skip checking if `from` is inside the blacklist.
                     // Even though that can block transferring out of wrapper contracts,
                     // we don't want tokens to be stuck.
-                    // OpenSea's original repo is planning to remove the `from` check.
 
                     // Restore the part of the free memory pointer that was overwritten,
                     // which is guaranteed to be zero, if less than 8tb of memory is used.
