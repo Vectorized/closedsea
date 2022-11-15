@@ -50,9 +50,9 @@ See [`src/example/ExampleERC721.sol`](./src/example/ExampleERC721.sol).
 ### `_registerForOperatorFiltering`
 ```solidity 
 function _registerForOperatorFiltering(
-	address subscriptionOrRegistrantToCopy, 
-	bool subscribe
-) internal
+    address subscriptionOrRegistrantToCopy, 
+    bool subscribe
+) internal virtual
 ````
 Registration function that can be called in an initializer, anywhere.  
 
