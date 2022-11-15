@@ -53,7 +53,7 @@ abstract contract OperatorFilterer {
     }
 
     /// @dev Modifier to guard a function and revert if `from` is a blocked operator.
-    /// Can be turned off by passing false for `filterEnabled`.
+    /// Can be turned off by via `filterEnabled`.
     modifier onlyAllowedOperator(address from, bool filterEnabled) virtual {
         /// @solidity memory-safe-assembly
         assembly {
@@ -63,8 +63,8 @@ abstract contract OperatorFilterer {
             // to avoid reverting when a chain does not have the registry.
 
             if filterEnabled {
-                // Check if `from` is not equal to `msg.sender`, discarding the upper
-                // 96 bits of `from` in case they are dirty.
+                // Check if `from` is not equal to `msg.sender`,
+                // discarding the upper 96 bits of `from` in case they are dirty.
                 if iszero(eq(shr(96, shl(96, from)), caller())) {
                     // Store the function selector of `isOperatorAllowed(address,address)`,
                     // shifted left by 6 bytes, which is enough for 8tb of memory.
@@ -90,6 +90,36 @@ abstract contract OperatorFilterer {
                     // which is guaranteed to be zero, if less than 8tb of memory is used.
                     mstore(0x3a, 0)
                 }
+            }
+        }
+        _;
+    }
+
+    /// @dev Modifier to guard a function from approving a blocked operator.
+    /// Can be turned off by via `filterEnabled`.
+    modifier onlyAllowedOperatorApproval(address operator, bool filterEnabled) virtual {
+        /// @solidity memory-safe-assembly
+        assembly {
+            // For more information on the optimization techniques used,
+            // see the comments in `onlyAllowedOperator`.
+
+            if filterEnabled {
+                // Store the function selector of `isOperatorAllowed(address,address)`,
+                mstore(0x00, 0xc6171134001122334455)
+                // Store the `address(this)`.
+                mstore(0x1a, address())
+                // Store the `operator`, discarding the upper 96 bits in case they are dirty.
+                mstore(0x3a, shr(96, shl(96, operator)))
+
+                // `isOperatorAllowed` always returns true if it does not revert.
+                if iszero(staticcall(gas(), _OPERATOR_FILTER_REGISTRY, 0x16, 0x44, 0x00, 0x00)) {
+                    // Bubble up the revert if the staticcall reverts.
+                    returndatacopy(0x00, 0x00, returndatasize())
+                    revert(0x00, returndatasize())
+                }
+
+                // Restore the part of the free memory pointer that was overwritten.
+                mstore(0x3a, 0)
             }
         }
         _;
