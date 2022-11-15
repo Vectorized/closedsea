@@ -8,7 +8,7 @@ pragma solidity ^0.8.4;
 /// See: https://github.com/ProjectOpenSea/operator-filter-registry
 abstract contract OperatorFilterer {
     /// @dev The default OpenSea operator blocklist subscription.
-    address internal constant _OPENSEA_DEFAULT_SUBSCRIPTION = 0x3cc6CddA760b79bAfa08dF41ECFA224f810dCeB6;
+    address internal constant _DEFAULT_SUBSCRIPTION = 0x3cc6CddA760b79bAfa08dF41ECFA224f810dCeB6;
 
     /// @dev The OpenSea operator filter registry.
     address internal constant _OPERATOR_FILTER_REGISTRY = 0x000000000000AAeB6D7670E522A718067333cd4E;
@@ -17,7 +17,7 @@ abstract contract OperatorFilterer {
     /// and subscribe to the default OpenSea operator blocklist.
     /// Note: Will not revert nor update existing settings for repeated registration.
     function _registerForOperatorFiltering() internal {
-        _registerForOperatorFiltering(_OPENSEA_DEFAULT_SUBSCRIPTION, true);
+        _registerForOperatorFiltering(_DEFAULT_SUBSCRIPTION, true);
     }
 
     /// @dev Registers the current contract to OpenSea's operator filter.

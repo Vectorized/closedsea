@@ -11,7 +11,6 @@ contract DefaultOperatorFiltererTest is BaseRegistryTest {
     address filteredCodeHashAddress;
     bytes32 filteredCodeHash;
     address notFiltered;
-    address constant DEFAULT_SUBSCRIPTION = address(0x3cc6CddA760b79bAfa08dF41ECFA224f810dCeB6);
 
     function setUp() public override {
         super.setUp();
