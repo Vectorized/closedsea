@@ -8,47 +8,9 @@ Gas optimized and flexible version of OpenSea's Mandatory Operator Filterer for 
 
 ## Features
 
-- `modifier onlyAllowedOperator(address from, bool filterEnabled)`  
-   modifier that allows conditional toggling of the filter.  
-
-   You can passed in a bool extracted from a packed variable for `filterEnabled`.
-
-- `_registerForOperatorFiltering(address subscriptionOrRegistrantToCopy, bool subscribe)`
-
-   Registration function that can be called in an initializer, anywhere.  
-
-   Can be called repeatedly without issues.
-
-- `_registerForOperatorFiltering()` 
-
-   Registration function similar to above. Uses OpenSea's default block list. 
-
 - Gas optimized. Saves 1500+ gas on transfers.
 
 - Keeps your cilents and some marketplaces happy.
-
-## Example
-
-See `src/example/ExampleERC721.sol`.
-
-## Contracts
-
-```ml
-src
-├─ OperatorFilterer.sol — "Operator Filterer for regular and upgradeable contracts"
-└─ example
-   ├─ ExampleERC1155.sol — "ERC1155 example"
-   ├─ ExampleERC721.sol — "ERC721 example with demonstration of togglability"
-   └─ upgradeable
-      ├─ ExampleERC1155Upgradeable.sol — "ERC1155 upgradeable example"
-      └─ ExampleERC721Upgradeable.sol — "ERC721 upgradeable example"
-```
-
-## Safety
-
-This is **experimental software** and is provided on an "as is" and "as available" basis.
-
-We **do not give any warranties** and **will not be liable for any loss** incurred through any use of this codebase.
 
 ## Installation
 
@@ -63,6 +25,57 @@ To install with [**Hardhat**](https://github.com/nomiclabs/hardhat) or [**Truffl
 ```sh
 npm install closedsea
 ```
+
+## Contracts
+
+```ml
+src
+├─ OperatorFilterer.sol — "Operator Filterer for regular and upgradeable contracts"
+└─ example
+   ├─ ExampleERC1155.sol — "ERC1155 example"
+   ├─ ExampleERC721.sol — "ERC721 example with demonstration of togglability"
+   └─ upgradeable
+      ├─ ExampleERC1155Upgradeable.sol — "ERC1155 upgradeable example"
+      └─ ExampleERC721Upgradeable.sol — "ERC721 upgradeable example"
+```
+
+## Example
+
+See [`src/example/ExampleERC721.sol`](./src/example/ExampleERC721.sol).
+
+## API
+
+### `_registerForOperatorFiltering`
+```solidity 
+function _registerForOperatorFiltering(address subscriptionOrRegistrantToCopy, bool subscribe) internal
+````
+Registration function that can be called in an initializer, anywhere.  
+
+Can be called repeatedly without issues.
+
+To subscribe to the default block list, simply use `_registerForOperatorFiltering()`, without arguments.
+
+### `onlyAllowedOperator`
+```solidity
+modifier onlyAllowedOperator(address from, bool filterEnabled) virtual
+```  
+Modifier to guard a function and revert if `from` is a blocked operator.  
+
+Can be turned on or off by via `filterEnabled`.
+
+### `onlyAllowedOperatorApproval`
+```solidity
+modifier onlyAllowedOperatorApproval(address operator, bool filterEnabled) virtual
+```  
+Modifier to guard a function from approving a blocked operator.  
+
+Can be turned on or off by via `filterEnabled`.
+
+## Safety
+
+This is **experimental software** and is provided on an "as is" and "as available" basis.
+
+We **do not give any warranties** and **will not be liable for any loss** incurred through any use of this codebase.
 
 ## Acknowledgements
 
