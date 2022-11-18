@@ -36,14 +36,16 @@ src
 └─ example
    ├─ ExampleERC1155.sol — "ERC1155 example"
    ├─ ExampleERC721.sol — "ERC721 example with demonstration of togglability"
+   ├─ ExampleERC721A.sol — "ERC721A example with demonstration of togglability"
    └─ upgradeable
       ├─ ExampleERC1155Upgradeable.sol — "ERC1155 upgradeable example"
-      └─ ExampleERC721Upgradeable.sol — "ERC721 upgradeable example"
+      ├─ ExampleERC721Upgradeable.sol — "ERC721 upgradeable example"
+      └─ ExampleERC721AUpgradeable.sol — "ERC721A upgradeable example"
 ```
 
 ## Example
 
-See [`src/example/ExampleERC721.sol`](./src/example/ExampleERC721.sol).
+See [`src/example/ExampleERC721A.sol`](./src/example/ExampleERC721A.sol).
 
 ## API
 
