@@ -57,43 +57,8 @@ abstract contract OperatorFilterer {
     /// For gas efficiency, you can use tight variable packing to efficiently read / write
     /// the boolean value for `enabled`.
     modifier onlyAllowedOperator(address from, bool enabled) virtual {
-        /// @solidity memory-safe-assembly
-        assembly {
-            // This code prioritizes runtime gas costs on a chain with the registry.
-            // As such, we will not use `extcodesize`, but rather abuse the behavior
-            // of `staticcall` returning 1 when called on an empty / missing contract,
-            // to avoid reverting when a chain does not have the registry.
-
-            if enabled {
-                // Check if `from` is not equal to `msg.sender`,
-                // discarding the upper 96 bits of `from` in case they are dirty.
-                if iszero(eq(shr(96, shl(96, from)), caller())) {
-                    // Store the function selector of `isOperatorAllowed(address,address)`,
-                    // shifted left by 6 bytes, which is enough for 8tb of memory.
-                    // We waste 6-3 = 3 bytes to save on 6 runtime gas (PUSH1 0x224 SHL).
-                    mstore(0x00, 0xc6171134001122334455)
-                    // Store the `address(this)`.
-                    mstore(0x1a, address())
-                    // Store the `msg.sender`.
-                    mstore(0x3a, caller())
-
-                    // `isOperatorAllowed` always returns true if it does not revert.
-                    if iszero(staticcall(gas(), _OPERATOR_FILTER_REGISTRY, 0x16, 0x44, 0x00, 0x00)) {
-                        // Bubble up the revert if the staticcall reverts.
-                        returndatacopy(0x00, 0x00, returndatasize())
-                        revert(0x00, returndatasize())
-                    }
-
-                    // We'll skip checking if `from` is inside the blacklist.
-                    // Even though that can block transferring out of wrapper contracts,
-                    // we don't want tokens to be stuck.
-
-                    // Restore the part of the free memory pointer that was overwritten,
-                    // which is guaranteed to be zero, if less than 8tb of memory is used.
-                    mstore(0x3a, 0)
-                }
-            }
-        }
+        if (enabled)
+            if (from != msg.sender) _revertIfBlocked(msg.sender);
         _;
     }
 
@@ -102,30 +67,37 @@ abstract contract OperatorFilterer {
     /// For efficiency, you can use tight variable packing to efficiently read / write
     /// the boolean value for `enabled`.
     modifier onlyAllowedOperatorApproval(address operator, bool enabled) virtual {
+        if (enabled) _revertIfBlocked(operator);
+        _;
+    }
+
+    /// @dev Helper function that reverts if the `operator` is blocked by the registry.
+    function _revertIfBlocked(address operator) private view {
         /// @solidity memory-safe-assembly
         assembly {
-            // For more information on the optimization techniques used,
-            // see the comments in `onlyAllowedOperator`.
+            // Store the function selector of `isOperatorAllowed(address,address)`,
+            // shifted left by 6 bytes, which is enough for 8tb of memory.
+            // We waste 6-3 = 3 bytes to save on 6 runtime gas (PUSH1 0x224 SHL).
+            mstore(0x00, 0xc6171134001122334455)
+            // Store the `address(this)`.
+            mstore(0x1a, address())
+            // Store the `operator`.
+            mstore(0x3a, operator)
 
-            if enabled {
-                // Store the function selector of `isOperatorAllowed(address,address)`,
-                mstore(0x00, 0xc6171134001122334455)
-                // Store the `address(this)`.
-                mstore(0x1a, address())
-                // Store the `operator`, discarding the upper 96 bits in case they are dirty.
-                mstore(0x3a, shr(96, shl(96, operator)))
-
-                // `isOperatorAllowed` always returns true if it does not revert.
-                if iszero(staticcall(gas(), _OPERATOR_FILTER_REGISTRY, 0x16, 0x44, 0x00, 0x00)) {
-                    // Bubble up the revert if the staticcall reverts.
-                    returndatacopy(0x00, 0x00, returndatasize())
-                    revert(0x00, returndatasize())
-                }
-
-                // Restore the part of the free memory pointer that was overwritten.
-                mstore(0x3a, 0)
+            // `isOperatorAllowed` always returns true if it does not revert.
+            if iszero(staticcall(gas(), _OPERATOR_FILTER_REGISTRY, 0x16, 0x44, 0x00, 0x00)) {
+                // Bubble up the revert if the staticcall reverts.
+                returndatacopy(0x00, 0x00, returndatasize())
+                revert(0x00, returndatasize())
             }
+
+            // We'll skip checking if `from` is inside the blacklist.
+            // Even though that can block transferring out of wrapper contracts,
+            // we don't want tokens to be stuck.
+
+            // Restore the part of the free memory pointer that was overwritten,
+            // which is guaranteed to be zero, if less than 8tb of memory is used.
+            mstore(0x3a, 0)
         }
-        _;
     }
 }
