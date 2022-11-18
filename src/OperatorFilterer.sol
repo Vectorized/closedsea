@@ -52,13 +52,14 @@ abstract contract OperatorFilterer {
         }
     }
 
-    /// @dev Modifier to guard a function and revert if `from` is a blocked operator.
+    /// @dev Modifier to guard a function and revert if the caller is a blocked operator.
     /// Can be turned on / off via `enabled`.
     /// For gas efficiency, you can use tight variable packing to efficiently read / write
     /// the boolean value for `enabled`.
     modifier onlyAllowedOperator(address from, bool enabled) virtual {
         if (enabled)
-            if (from != msg.sender) _revertIfBlocked(msg.sender);
+            if (from != msg.sender)
+                if (!_isPriorityOperator(msg.sender)) _revertIfBlocked(msg.sender);
         _;
     }
 
@@ -67,7 +68,8 @@ abstract contract OperatorFilterer {
     /// For efficiency, you can use tight variable packing to efficiently read / write
     /// the boolean value for `enabled`.
     modifier onlyAllowedOperatorApproval(address operator, bool enabled) virtual {
-        if (enabled) _revertIfBlocked(operator);
+        if (enabled)
+            if (!_isPriorityOperator(operator)) _revertIfBlocked(operator);
         _;
     }
 
@@ -99,5 +101,11 @@ abstract contract OperatorFilterer {
             // which is guaranteed to be zero, if less than 8tb of memory is used.
             mstore(0x3a, 0)
         }
+    }
+
+    /// @dev For deriving contracts to override, such that preferred marketplaces can
+    /// skip the OpenSea registry check, helping users save gas.
+    function _isPriorityOperator(address) internal view virtual returns (bool) {
+        return false;
     }
 }
