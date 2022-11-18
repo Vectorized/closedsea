@@ -54,5 +54,4 @@ contract PriorityOperatorFiltererTest is BaseRegistryTest {
         vm.prank(priorityOperator);
         filterer.filter(notFiltered);
     }
-
 }

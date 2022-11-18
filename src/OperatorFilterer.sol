@@ -58,9 +58,8 @@ abstract contract OperatorFilterer {
     /// the boolean value for `enabled`.
     modifier onlyAllowedOperator(address from, bool enabled) virtual {
         if (enabled)
-            if (from != msg.sender) 
-                if (!_isPriorityOperator(msg.sender))
-                    _revertIfBlocked(msg.sender);
+            if (from != msg.sender)
+                if (!_isPriorityOperator(msg.sender)) _revertIfBlocked(msg.sender);
         _;
     }
 
@@ -70,8 +69,7 @@ abstract contract OperatorFilterer {
     /// the boolean value for `enabled`.
     modifier onlyAllowedOperatorApproval(address operator, bool enabled) virtual {
         if (enabled)
-            if (!_isPriorityOperator(operator)) 
-                _revertIfBlocked(operator);
+            if (!_isPriorityOperator(operator)) _revertIfBlocked(operator);
         _;
     }
 
@@ -107,7 +105,7 @@ abstract contract OperatorFilterer {
 
     /// @dev For deriving contracts to override, such that preferred marketplaces can
     /// skip the OpenSea registry check, helping users save gas.
-    function _isPriorityOperator(address) internal virtual view returns (bool) {
+    function _isPriorityOperator(address) internal view virtual returns (bool) {
         return false;
     }
 }
