@@ -10,7 +10,7 @@ Gas optimized and flexible version of OpenSea's Mandatory Operator Filterer for 
 
 - Modifiers can be toggled on / off efficiently.
 
-- Gas optimized. Saves 1500+ gas on transfers.
+- Gas optimized. Saves 300+ gas on transfers.
 
 - Keeps your cilents and some marketplaces happy.
 
@@ -92,7 +92,9 @@ Returns false for all inputs by default.
 
 ## Safety
 
-This is **experimental software** and is provided on an "as is" and "as available" basis.
+We have verified with OpenSea engineers that ClosedSea is fully compatible with their royalties enforcement system, as of Nov 18th 2022.
+
+Nevertheless, this codebase is provided on an "as is" and "as available" basis.
 
 We **do not give any warranties** and **will not be liable for any loss** incurred through any use of this codebase.
 
