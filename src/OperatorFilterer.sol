@@ -105,7 +105,7 @@ abstract contract OperatorFilterer {
     }
 
     /// @dev For deriving contracts to override, so that preferred marketplaces can
-    /// skip the operator filtering, helping users save gas.
+    /// skip operator filtering, helping users save gas.
     /// Returns false for all inputs by default.
     function _isPriorityOperator(address) internal view virtual returns (bool) {
         return false;

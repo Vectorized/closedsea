@@ -86,7 +86,7 @@ Returns true by default.
 ```solidity
 function _isPriorityOperator(address operator) internal view virtual returns (bool)
 ```  
-For deriving contracts to override, so that preferred marketplaces can skip the operator filtering, helping users save gas.
+For deriving contracts to override, so that preferred marketplaces can skip operator filtering, helping users save gas.
 
 Returns false for all inputs by default.
 
