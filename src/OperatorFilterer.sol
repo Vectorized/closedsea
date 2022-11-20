@@ -104,7 +104,7 @@ abstract contract OperatorFilterer {
     }
 
     /// @dev For deriving contracts to override, such that preferred marketplaces can
-    /// skip the OpenSea registry check, helping users save gas.
+    /// skip the operator filtering, helping users save gas.
     function _isPriorityOperator(address) internal view virtual returns (bool) {
         return false;
     }

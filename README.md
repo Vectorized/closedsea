@@ -84,7 +84,7 @@ For deriving contracts to override, so that operator filtering can be turned on 
 ```solidity
 function _isPriorityOperator(address operator) internal view virtual returns (bool)
 ```  
-For deriving contracts to override, such that preferred marketplaces can skip the OpenSea registry check, helping users save gas.
+For deriving contracts to override, such that preferred marketplaces can skip the operator filtering, helping users save gas.
 
 ## Safety
 
