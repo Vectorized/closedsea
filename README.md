@@ -34,18 +34,25 @@ npm install closedsea
 src
 ├─ OperatorFilterer.sol — "Operator Filterer for regular and upgradeable contracts"
 └─ example
-   ├─ ExampleERC1155.sol — "ERC1155 example"
-   ├─ ExampleERC721.sol — "ERC721 example with demonstration of togglability"
    ├─ ExampleERC721A.sol — "ERC721A example with demonstration of togglability"
+   ├─ ExampleERC721.sol — "ERC721 example with demonstration of togglability"
+   ├─ ExampleERC1155.sol — "ERC1155 example"
    └─ upgradeable
-      ├─ ExampleERC1155Upgradeable.sol — "ERC1155 upgradeable example"
+      ├─ ExampleERC721AUpgradeable.sol — "ERC721A upgradeable example"
       ├─ ExampleERC721Upgradeable.sol — "ERC721 upgradeable example"
-      └─ ExampleERC721AUpgradeable.sol — "ERC721A upgradeable example"
-```
+      └─ ExampleERC1155Upgradeable.sol — "ERC1155 upgradeable example"
+``` 
 
-## Example
+## Examples
 
-See [`src/example/ExampleERC721A.sol`](./src/example/ExampleERC721A.sol).
+| Type | Contract |
+|---|---|
+| ERC721A | [`src/example/ExampleERC721A.sol`](./src/example/ExampleERC721A.sol) |
+| ERC721 | [`src/example/ExampleERC721.sol`](./src/example/ExampleERC721.sol) |
+| ERC1155 | [`src/example/ExampleERC1155.sol`](./src/example/ExampleERC1155.sol) |
+| ERC721AUpgradeable | [`src/example/upgradeable/ExampleERC721AUpgradeable.sol`](./src/example/upgradeable/ExampleERC721AUpgradeable.sol) |
+| ERC721Upgradeable | [`src/example/upgradeable/ExampleERC721Upgradeable.sol`](./src/example/upgradeable/ExampleERC721Upgradeable.sol) |
+| ERC1155Upgradeable | [`src/example/upgradeable/ExampleERC1155Upgradeable.sol`](./src/example/upgradeable/ExampleERC1155Upgradeable.sol) |
 
 ## API
 
