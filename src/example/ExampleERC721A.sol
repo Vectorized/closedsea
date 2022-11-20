@@ -24,20 +24,11 @@ abstract contract ExampleERC721A is ERC721A, OperatorFilterer, Ownable {
         _registerForOperatorFiltering();
     }
 
-    function setApprovalForAll(address operator, bool approved)
-        public
-        override
-        onlyAllowedOperatorApproval(operator, operatorFilteringEnabled)
-    {
+    function setApprovalForAll(address operator, bool approved) public override onlyAllowedOperatorApproval(operator) {
         super.setApprovalForAll(operator, approved);
     }
 
-    function approve(address operator, uint256 tokenId)
-        public
-        payable
-        override
-        onlyAllowedOperatorApproval(operator, operatorFilteringEnabled)
-    {
+    function approve(address operator, uint256 tokenId) public payable override onlyAllowedOperatorApproval(operator) {
         super.approve(operator, tokenId);
     }
 
@@ -45,7 +36,7 @@ abstract contract ExampleERC721A is ERC721A, OperatorFilterer, Ownable {
         address from,
         address to,
         uint256 tokenId
-    ) public payable override onlyAllowedOperator(from, operatorFilteringEnabled) {
+    ) public payable override onlyAllowedOperator(from) {
         super.transferFrom(from, to, tokenId);
     }
 
@@ -53,7 +44,7 @@ abstract contract ExampleERC721A is ERC721A, OperatorFilterer, Ownable {
         address from,
         address to,
         uint256 tokenId
-    ) public payable override onlyAllowedOperator(from, operatorFilteringEnabled) {
+    ) public payable override onlyAllowedOperator(from) {
         super.safeTransferFrom(from, to, tokenId);
     }
 
@@ -62,11 +53,15 @@ abstract contract ExampleERC721A is ERC721A, OperatorFilterer, Ownable {
         address to,
         uint256 tokenId,
         bytes memory data
-    ) public payable override onlyAllowedOperator(from, operatorFilteringEnabled) {
+    ) public payable override onlyAllowedOperator(from) {
         super.safeTransferFrom(from, to, tokenId, data);
     }
 
     function setOperatorFilteringEnabled(bool value) public onlyOwner {
         operatorFilteringEnabled = value;
+    }
+
+    function _operatorFilteringEnabled() internal view virtual override returns (bool) {
+        return operatorFilteringEnabled;
     }
 }

@@ -18,7 +18,7 @@ contract Filterer is OperatorFilterer, Ownable {
         }
     }
 
-    function filter(address from) public view onlyAllowedOperator(from, true) returns (bool) {
+    function filter(address from) public view onlyAllowedOperator(from) returns (bool) {
         /// @solidity memory-safe-assembly
         assembly {
             if iszero(eq(mload(0x40), 0x80)) {

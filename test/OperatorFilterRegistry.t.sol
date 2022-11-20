@@ -10,7 +10,7 @@ contract Filterer is OperatorFilterer, Ownable {
         _registerForOperatorFiltering(address(0), false);
     }
 
-    function testFilter(address from) public view onlyAllowedOperator(from, true) returns (bool) {
+    function testFilter(address from) public view onlyAllowedOperator(from) returns (bool) {
         return true;
     }
 }
