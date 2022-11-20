@@ -56,14 +56,16 @@ abstract contract OperatorFilterer {
     modifier onlyAllowedOperator(address from) virtual {
         if (from != msg.sender)
             if (!_isPriorityOperator(msg.sender))
-                if (_operatorFilteringEnabled()) _revertIfBlocked(msg.sender);
+                if (_operatorFilteringEnabled())
+                     _revertIfBlocked(msg.sender);
         _;
     }
 
     /// @dev Modifier to guard a function from approving a blocked operator..
     modifier onlyAllowedOperatorApproval(address operator) virtual {
-        if (!_isPriorityOperator(operator))
-            if (_operatorFilteringEnabled()) _revertIfBlocked(operator);
+        if (!_isPriorityOperator(operator)) 
+            if (_operatorFilteringEnabled()) 
+                _revertIfBlocked(operator);
         _;
     }
 
@@ -96,16 +98,16 @@ abstract contract OperatorFilterer {
             mstore(0x3a, 0)
         }
     }
-
+    
     /// @dev For deriving contracts to override, so that operator filtering
     /// can be turned on / off.
     function _operatorFilteringEnabled() internal view virtual returns (bool) {
         return true;
     }
-
+    
     /// @dev For deriving contracts to override, such that preferred marketplaces can
     /// skip the OpenSea registry check, helping users save gas.
     function _isPriorityOperator(address) internal view virtual returns (bool) {
         return false;
-    }
+    }    
 }
