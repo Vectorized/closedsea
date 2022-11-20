@@ -64,23 +64,27 @@ To subscribe to the [default OpenSea curated block list](https://github.com/Proj
 
 ### `onlyAllowedOperator`
 ```solidity
-modifier onlyAllowedOperator(address from, bool enabled) virtual
+modifier onlyAllowedOperator(address from) virtual
 ```  
 Modifier to guard a function and revert if `from` is a blocked operator.  
 
-Can be turned on / off via `enabled`.
-
-For efficiency, you can use tight variable packing to efficiently read / write the boolean value for `enabled`.
-
 ### `onlyAllowedOperatorApproval`
 ```solidity
-modifier onlyAllowedOperatorApproval(address operator, bool enabled) virtual
+modifier onlyAllowedOperatorApproval(address operator) virtual
 ```  
 Modifier to guard a function from approving a blocked operator.  
 
-Can be turned on / off via `enabled`.
+### `_operatorFilteringEnabled`
+```solidity
+function _operatorFilteringEnabled() internal view virtual returns (bool)
+```  
+For deriving contracts to override, so that operator filtering can be turned on / off.
 
-For efficiency, you can use tight variable packing to efficiently read / write the boolean value for `enabled`.
+### `_isPriorityOperator`
+```solidity
+function _isPriorityOperator(address operator) internal view virtual returns (bool)
+```  
+For deriving contracts to override, such that preferred marketplaces can skip the operator filtering, helping users save gas.
 
 ## Safety
 

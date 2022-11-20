@@ -8,7 +8,7 @@ contract DefaultFilterer is OperatorFilterer {
         _registerForOperatorFiltering();
     }
 
-    function filter(address from) public view onlyAllowedOperator(from, true) returns (bool) {
+    function filter(address from) public view onlyAllowedOperator(from) returns (bool) {
         return true;
     }
 }

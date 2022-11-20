@@ -19,11 +19,7 @@ abstract contract ExampleERC1155Upgradeable is ERC1155Upgradeable, OperatorFilte
         _registerForOperatorFiltering();
     }
 
-    function setApprovalForAll(address operator, bool approved)
-        public
-        override
-        onlyAllowedOperatorApproval(operator, true)
-    {
+    function setApprovalForAll(address operator, bool approved) public override onlyAllowedOperatorApproval(operator) {
         super.setApprovalForAll(operator, approved);
     }
 
@@ -33,7 +29,7 @@ abstract contract ExampleERC1155Upgradeable is ERC1155Upgradeable, OperatorFilte
         uint256 tokenId,
         uint256 amount,
         bytes memory data
-    ) public override onlyAllowedOperator(from, true) {
+    ) public override onlyAllowedOperator(from) {
         super.safeTransferFrom(from, to, tokenId, amount, data);
     }
 
@@ -43,7 +39,7 @@ abstract contract ExampleERC1155Upgradeable is ERC1155Upgradeable, OperatorFilte
         uint256[] memory ids,
         uint256[] memory amounts,
         bytes memory data
-    ) public virtual override onlyAllowedOperator(from, true) {
+    ) public virtual override onlyAllowedOperator(from) {
         super.safeBatchTransferFrom(from, to, ids, amounts, data);
     }
 }

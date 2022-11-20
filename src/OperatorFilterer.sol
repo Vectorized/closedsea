@@ -53,23 +53,17 @@ abstract contract OperatorFilterer {
     }
 
     /// @dev Modifier to guard a function and revert if the caller is a blocked operator.
-    /// Can be turned on / off via `enabled`.
-    /// For gas efficiency, you can use tight variable packing to efficiently read / write
-    /// the boolean value for `enabled`.
-    modifier onlyAllowedOperator(address from, bool enabled) virtual {
-        if (enabled)
-            if (from != msg.sender)
-                if (!_isPriorityOperator(msg.sender)) _revertIfBlocked(msg.sender);
+    modifier onlyAllowedOperator(address from) virtual {
+        if (from != msg.sender)
+            if (!_isPriorityOperator(msg.sender))
+                if (_operatorFilteringEnabled()) _revertIfBlocked(msg.sender);
         _;
     }
 
-    /// @dev Modifier to guard a function from approving a blocked operator.
-    /// Can be turned on / off via `enabled`.
-    /// For efficiency, you can use tight variable packing to efficiently read / write
-    /// the boolean value for `enabled`.
-    modifier onlyAllowedOperatorApproval(address operator, bool enabled) virtual {
-        if (enabled)
-            if (!_isPriorityOperator(operator)) _revertIfBlocked(operator);
+    /// @dev Modifier to guard a function from approving a blocked operator..
+    modifier onlyAllowedOperatorApproval(address operator) virtual {
+        if (!_isPriorityOperator(operator))
+            if (_operatorFilteringEnabled()) _revertIfBlocked(operator);
         _;
     }
 
@@ -103,8 +97,14 @@ abstract contract OperatorFilterer {
         }
     }
 
+    /// @dev For deriving contracts to override, so that operator filtering
+    /// can be turned on / off.
+    function _operatorFilteringEnabled() internal view virtual returns (bool) {
+        return true;
+    }
+
     /// @dev For deriving contracts to override, such that preferred marketplaces can
-    /// skip the OpenSea registry check, helping users save gas.
+    /// skip the operator filtering, helping users save gas.
     function _isPriorityOperator(address) internal view virtual returns (bool) {
         return false;
     }

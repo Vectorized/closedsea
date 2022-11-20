@@ -19,15 +19,11 @@ abstract contract ExampleERC721Upgradeable is ERC721Upgradeable, OperatorFiltere
         _registerForOperatorFiltering();
     }
 
-    function setApprovalForAll(address operator, bool approved)
-        public
-        override
-        onlyAllowedOperatorApproval(operator, true)
-    {
+    function setApprovalForAll(address operator, bool approved) public override onlyAllowedOperatorApproval(operator) {
         super.setApprovalForAll(operator, approved);
     }
 
-    function approve(address operator, uint256 tokenId) public override onlyAllowedOperatorApproval(operator, true) {
+    function approve(address operator, uint256 tokenId) public override onlyAllowedOperatorApproval(operator) {
         super.approve(operator, tokenId);
     }
 
@@ -35,7 +31,7 @@ abstract contract ExampleERC721Upgradeable is ERC721Upgradeable, OperatorFiltere
         address from,
         address to,
         uint256 tokenId
-    ) public override onlyAllowedOperator(from, true) {
+    ) public override onlyAllowedOperator(from) {
         super.transferFrom(from, to, tokenId);
     }
 
@@ -43,7 +39,7 @@ abstract contract ExampleERC721Upgradeable is ERC721Upgradeable, OperatorFiltere
         address from,
         address to,
         uint256 tokenId
-    ) public override onlyAllowedOperator(from, true) {
+    ) public override onlyAllowedOperator(from) {
         super.safeTransferFrom(from, to, tokenId);
     }
 
@@ -52,7 +48,7 @@ abstract contract ExampleERC721Upgradeable is ERC721Upgradeable, OperatorFiltere
         address to,
         uint256 tokenId,
         bytes memory data
-    ) public override onlyAllowedOperator(from, true) {
+    ) public override onlyAllowedOperator(from) {
         super.safeTransferFrom(from, to, tokenId, data);
     }
 

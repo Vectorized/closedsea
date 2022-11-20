@@ -13,7 +13,7 @@ contract PriorityFilterer is OperatorFilterer, Ownable {
         _registerForOperatorFiltering(address(0), false);
     }
 
-    function filter(address from) public view onlyAllowedOperator(from, true) returns (bool) {
+    function filter(address from) public view onlyAllowedOperator(from) returns (bool) {
         return true;
     }
 
