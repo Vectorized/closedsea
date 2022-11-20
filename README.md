@@ -80,11 +80,15 @@ function _operatorFilteringEnabled() internal view virtual returns (bool)
 ```  
 For deriving contracts to override, so that operator filtering can be turned on / off.
 
+Returns true by default.
+
 ### `_isPriorityOperator`
 ```solidity
 function _isPriorityOperator(address operator) internal view virtual returns (bool)
 ```  
-For deriving contracts to override, such that preferred marketplaces can skip the operator filtering, helping users save gas.
+For deriving contracts to override, so that preferred marketplaces can skip operator filtering, helping users save gas.
+
+Returns false for all inputs by default.
 
 ## Safety
 
