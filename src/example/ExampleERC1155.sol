@@ -17,7 +17,11 @@ abstract contract ExampleERC1155 is ERC1155, OperatorFilterer, Ownable {
         _registerForOperatorFiltering();
     }
 
-    function setApprovalForAll(address operator, bool approved) public override onlyAllowedOperatorApproval(operator) {
+    function setApprovalForAll(address operator, bool approved)
+        public
+        override
+        onlyAllowedOperatorApproval(operator)
+    {
         super.setApprovalForAll(operator, approved);
     }
 

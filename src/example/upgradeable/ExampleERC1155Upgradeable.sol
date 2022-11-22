@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import {ERC1155Upgradeable} from "openzeppelin-contracts-upgradeable/token/ERC1155/ERC1155Upgradeable.sol";
+import {ERC1155Upgradeable} from
+    "openzeppelin-contracts-upgradeable/token/ERC1155/ERC1155Upgradeable.sol";
 import {OperatorFilterer} from "../../OperatorFilterer.sol";
 import {OwnableUpgradeable} from "openzeppelin-contracts-upgradeable/access/OwnableUpgradeable.sol";
 
@@ -12,14 +13,22 @@ import {OwnableUpgradeable} from "openzeppelin-contracts-upgradeable/access/Owna
  *         Adding the onlyAllowedOperator modifier to the transferFrom and both safeTransferFrom methods ensures that
  *         the msg.sender (operator) is allowed by the OperatorFilterRegistry.
  */
-abstract contract ExampleERC1155Upgradeable is ERC1155Upgradeable, OperatorFilterer, OwnableUpgradeable {
+abstract contract ExampleERC1155Upgradeable is
+    ERC1155Upgradeable,
+    OperatorFilterer,
+    OwnableUpgradeable
+{
     function initialize() public initializer {
         __ERC1155_init("");
         __Ownable_init();
         _registerForOperatorFiltering();
     }
 
-    function setApprovalForAll(address operator, bool approved) public override onlyAllowedOperatorApproval(operator) {
+    function setApprovalForAll(address operator, bool approved)
+        public
+        override
+        onlyAllowedOperatorApproval(operator)
+    {
         super.setApprovalForAll(operator, approved);
     }
 

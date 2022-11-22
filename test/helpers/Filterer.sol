@@ -12,23 +12,24 @@ contract Filterer is OperatorFilterer, Ownable {
         _registerForOperatorFiltering(address(0), false);
         /// @solidity memory-safe-assembly
         assembly {
-            if iszero(eq(mload(0x40), 0x80)) {
-                revert(0, 0)
-            }
+            if iszero(eq(mload(0x40), 0x80)) { revert(0, 0) }
         }
     }
 
     function filter(address from) public view onlyAllowedOperator(from) returns (bool) {
         /// @solidity memory-safe-assembly
         assembly {
-            if iszero(eq(mload(0x40), 0x80)) {
-                revert(0, 0)
-            }
+            if iszero(eq(mload(0x40), 0x80)) { revert(0, 0) }
         }
         return true;
     }
 
-    function filterOriginal(address from) public view onlyAllowedOperatorOriginal(from) returns (bool) {
+    function filterOriginal(address from)
+        public
+        view
+        onlyAllowedOperatorOriginal(from)
+        returns (bool)
+    {
         return true;
     }
 
@@ -38,7 +39,11 @@ contract Filterer is OperatorFilterer, Ownable {
                 _;
                 return;
             }
-            if (!IOperatorFilterRegistry(_OPERATOR_FILTER_REGISTRY).isOperatorAllowed(address(this), msg.sender)) {
+            if (
+                !IOperatorFilterRegistry(_OPERATOR_FILTER_REGISTRY).isOperatorAllowed(
+                    address(this), msg.sender
+                )
+            ) {
                 revert OperatorNotAllowed(msg.sender);
             }
         }

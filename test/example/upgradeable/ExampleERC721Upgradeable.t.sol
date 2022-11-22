@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import {ExampleERC721Upgradeable} from "../../../src/example/upgradeable/ExampleERC721Upgradeable.sol";
+import {ExampleERC721Upgradeable} from
+    "../../../src/example/upgradeable/ExampleERC721Upgradeable.sol";
 import {BaseRegistryTest} from "../../BaseRegistryTest.sol";
 import {Initializable} from "openzeppelin-contracts-upgradeable/proxy/utils/Initializable.sol";
 

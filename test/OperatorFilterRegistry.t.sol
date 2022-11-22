@@ -112,7 +112,11 @@ contract OperatorFilterRegistryTest is BaseRegistryTest {
         registry.register(superSubscription);
         vm.prank(subscription);
         registry.registerAndSubscribe(subscription, superSubscription);
-        vm.expectRevert(abi.encodeWithSelector(CannotSubscribeToRegistrantWithSubscription.selector, subscription));
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                CannotSubscribeToRegistrantWithSubscription.selector, subscription
+            )
+        );
         registry.registerAndSubscribe(address(this), subscription);
     }
 
@@ -206,7 +210,9 @@ contract OperatorFilterRegistryTest is BaseRegistryTest {
     function testUpdateOperator_AddressAlreadyFiltered() public {
         registry.register(address(this));
         registry.updateOperator(address(this), makeAddr("operator"), true);
-        vm.expectRevert(abi.encodeWithSelector(AddressAlreadyFiltered.selector, makeAddr("operator")));
+        vm.expectRevert(
+            abi.encodeWithSelector(AddressAlreadyFiltered.selector, makeAddr("operator"))
+        );
         registry.updateOperator(address(this), makeAddr("operator"), true);
     }
 
@@ -258,14 +264,18 @@ contract OperatorFilterRegistryTest is BaseRegistryTest {
 
     function testUpdateCodeHash_CodeHashNotFiltered() public {
         registry.register(address(this));
-        vm.expectRevert(abi.encodeWithSelector(CodeHashNotFiltered.selector, bytes32(bytes4(0xdeadbeef))));
+        vm.expectRevert(
+            abi.encodeWithSelector(CodeHashNotFiltered.selector, bytes32(bytes4(0xdeadbeef)))
+        );
         registry.updateCodeHash(address(this), bytes32(bytes4(0xdeadbeef)), false);
     }
 
     function testUpdateCodeHash_CodeHashAlreadyFiltered() public {
         registry.register(address(this));
         registry.updateCodeHash(address(this), bytes32(bytes4(0xdeadbeef)), true);
-        vm.expectRevert(abi.encodeWithSelector(CodeHashAlreadyFiltered.selector, bytes32(bytes4(0xdeadbeef))));
+        vm.expectRevert(
+            abi.encodeWithSelector(CodeHashAlreadyFiltered.selector, bytes32(bytes4(0xdeadbeef)))
+        );
         registry.updateCodeHash(address(this), bytes32(bytes4(0xdeadbeef)), true);
     }
 
@@ -345,7 +355,9 @@ contract OperatorFilterRegistryTest is BaseRegistryTest {
         address[] memory operator = new address[](2);
         operator[0] = makeAddr("operator1");
         operator[1] = makeAddr("operator2");
-        vm.expectRevert(abi.encodeWithSelector(AddressAlreadyFiltered.selector, makeAddr("operator1")));
+        vm.expectRevert(
+            abi.encodeWithSelector(AddressAlreadyFiltered.selector, makeAddr("operator1"))
+        );
         registry.updateOperators(address(this), operator, true);
     }
 
@@ -409,7 +421,9 @@ contract OperatorFilterRegistryTest is BaseRegistryTest {
         bytes32[] memory codeHash = new bytes32[](2);
         codeHash[0] = bytes32(bytes4(0xdeadbeef));
         codeHash[1] = bytes32(bytes4(0xdeafbeef));
-        vm.expectRevert(abi.encodeWithSelector(CodeHashNotFiltered.selector, bytes32(bytes4(0xdeadbeef))));
+        vm.expectRevert(
+            abi.encodeWithSelector(CodeHashNotFiltered.selector, bytes32(bytes4(0xdeadbeef)))
+        );
         registry.updateCodeHashes(address(this), codeHash, false);
     }
 
@@ -429,7 +443,9 @@ contract OperatorFilterRegistryTest is BaseRegistryTest {
         bytes32[] memory codeHash = new bytes32[](2);
         codeHash[0] = bytes32(bytes4(0xdeadbeef));
         codeHash[1] = bytes32(bytes4(0xdeafbeef));
-        vm.expectRevert(abi.encodeWithSelector(CodeHashAlreadyFiltered.selector, bytes32(bytes4(0xdeadbeef))));
+        vm.expectRevert(
+            abi.encodeWithSelector(CodeHashAlreadyFiltered.selector, bytes32(bytes4(0xdeadbeef)))
+        );
         registry.updateCodeHashes(address(this), codeHash, true);
     }
 
@@ -525,7 +541,11 @@ contract OperatorFilterRegistryTest is BaseRegistryTest {
         vm.prank(subscription);
         registry.registerAndSubscribe(subscription, superSubscription);
         registry.register(address(this));
-        vm.expectRevert(abi.encodeWithSelector(CannotSubscribeToRegistrantWithSubscription.selector, subscription));
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                CannotSubscribeToRegistrantWithSubscription.selector, subscription
+            )
+        );
         registry.subscribe(address(this), subscription);
     }
 
@@ -819,7 +839,9 @@ contract OperatorFilterRegistryTest is BaseRegistryTest {
         assertTrue(registry.isOperatorAllowed(address(this), makeAddr("allowed")));
         vm.expectRevert(abi.encodeWithSelector(AddressFiltered.selector, address(operator)));
         registry.isOperatorAllowed(address(this), operator);
-        vm.expectRevert(abi.encodeWithSelector(CodeHashFiltered.selector, address(toCheck), codeHash));
+        vm.expectRevert(
+            abi.encodeWithSelector(CodeHashFiltered.selector, address(toCheck), codeHash)
+        );
         registry.isOperatorAllowed(address(this), toCheck);
     }
 
@@ -840,7 +862,9 @@ contract OperatorFilterRegistryTest is BaseRegistryTest {
         assertTrue(registry.isOperatorAllowed(address(this), makeAddr("allowed")));
         vm.expectRevert(abi.encodeWithSelector(AddressFiltered.selector, address(operator)));
         registry.isOperatorAllowed(address(this), operator);
-        vm.expectRevert(abi.encodeWithSelector(CodeHashFiltered.selector, address(toCheck), codeHash));
+        vm.expectRevert(
+            abi.encodeWithSelector(CodeHashFiltered.selector, address(toCheck), codeHash)
+        );
         registry.isOperatorAllowed(address(this), toCheck);
     }
 
