@@ -16,8 +16,10 @@ remappings = [
   "erc721a=lib/erc721a/contracts/",
   "erc721a-upgradeable=lib/erc721a-upgradeable/contracts/",
   "operator-filter-registry=lib/operator-filter-registry/src/"
-
 ]
+
+[fmt]
+line_length = 100 # While we allow up to 120, we lint at 100 for readability.
 
 [profile.default.fuzz]
 runs = 256

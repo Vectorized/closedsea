@@ -53,7 +53,11 @@ contract OperatorFiltererTest is BaseRegistryTest {
         vm.expectRevert(abi.encodeWithSelector(AddressFiltered.selector, filteredAddress));
         vm.prank(filteredAddress);
         filterer.filter(notFiltered);
-        vm.expectRevert(abi.encodeWithSelector(CodeHashFiltered.selector, filteredCodeHashAddress, filteredCodeHash));
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                CodeHashFiltered.selector, filteredCodeHashAddress, filteredCodeHash
+            )
+        );
         vm.prank(filteredCodeHashAddress);
         filterer.filter(notFiltered);
     }

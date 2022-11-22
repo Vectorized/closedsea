@@ -22,7 +22,10 @@ abstract contract OperatorFilterer {
 
     /// @dev Registers the current contract to OpenSea's operator filter.
     /// Note: Will not revert nor update existing settings for repeated registration.
-    function _registerForOperatorFiltering(address subscriptionOrRegistrantToCopy, bool subscribe) internal virtual {
+    function _registerForOperatorFiltering(address subscriptionOrRegistrantToCopy, bool subscribe)
+        internal
+        virtual
+    {
         /// @solidity memory-safe-assembly
         assembly {
             let functionSelector := 0x7d3e3dbe // `registerAndSubscribe(address,address)`.
@@ -54,16 +57,19 @@ abstract contract OperatorFilterer {
 
     /// @dev Modifier to guard a function and revert if the caller is a blocked operator.
     modifier onlyAllowedOperator(address from) virtual {
-        if (from != msg.sender)
-            if (!_isPriorityOperator(msg.sender))
+        if (from != msg.sender) {
+            if (!_isPriorityOperator(msg.sender)) {
                 if (_operatorFilteringEnabled()) _revertIfBlocked(msg.sender);
+            }
+        }
         _;
     }
 
     /// @dev Modifier to guard a function from approving a blocked operator..
     modifier onlyAllowedOperatorApproval(address operator) virtual {
-        if (!_isPriorityOperator(operator))
+        if (!_isPriorityOperator(operator)) {
             if (_operatorFilteringEnabled()) _revertIfBlocked(operator);
+        }
         _;
     }
 
