@@ -12,7 +12,7 @@ Gas optimized and flexible version of OpenSea's Mandatory Operator Filterer for 
 
 - Gas optimized. Saves 300+ gas on transfers.
 
-- Keeps your cilents and some marketplaces happy.
+- Keeps your clients and some marketplaces happy.
 
 ## Installation
 
