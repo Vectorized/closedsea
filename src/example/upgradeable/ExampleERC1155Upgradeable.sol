@@ -48,7 +48,7 @@ abstract contract ExampleERC1155Upgradeable is
         uint256[] memory ids,
         uint256[] memory amounts,
         bytes memory data
-    ) public virtual override onlyAllowedOperator(from) {
+    ) public override onlyAllowedOperator(from) {
         super.safeBatchTransferFrom(from, to, ids, amounts, data);
     }
 }

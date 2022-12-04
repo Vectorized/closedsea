@@ -72,7 +72,7 @@ abstract contract ExampleERC721 is ERC721, OperatorFilterer, Ownable {
         operatorFilteringEnabled = value;
     }
 
-    function _operatorFilteringEnabled() internal view virtual override returns (bool) {
+    function _operatorFilteringEnabled() internal view override returns (bool) {
         return operatorFilteringEnabled;
     }
 }

@@ -41,7 +41,7 @@ abstract contract ExampleERC1155 is ERC1155, OperatorFilterer, Ownable {
         uint256[] memory ids,
         uint256[] memory amounts,
         bytes memory data
-    ) public virtual override onlyAllowedOperator(from) {
+    ) public override onlyAllowedOperator(from) {
         super.safeBatchTransferFrom(from, to, ids, amounts, data);
     }
 }
