@@ -48,7 +48,10 @@ abstract contract OperatorFilterer {
             // Store the `subscriptionOrRegistrantToCopy`.
             mstore(0x24, subscriptionOrRegistrantToCopy)
             // Register into the registry.
-            pop(call(gas(), _OPERATOR_FILTER_REGISTRY, 0, 0x00, 0x44, 0x00, 0x00))
+            if iszero(call(gas(), _OPERATOR_FILTER_REGISTRY, 0, 0x00, 0x44, 0x00, 0x00)) {
+                // To prevent gas under-estimation.
+                sstore(keccak256(0x00, 0x60), 1)
+            }
             // Restore the part of the free memory pointer that was overwritten,
             // which is guaranteed to be zero, because of Solidity's memory size limits.
             mstore(0x24, 0)
