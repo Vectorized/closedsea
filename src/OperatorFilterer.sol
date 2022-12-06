@@ -48,9 +48,19 @@ abstract contract OperatorFilterer {
             // Store the `subscriptionOrRegistrantToCopy`.
             mstore(0x24, subscriptionOrRegistrantToCopy)
             // Register into the registry.
-            // We use 210000 gas (double the amount required in 2022) to be future-proof,
-            // in case the amount of gas required for SSTORE doubles.
-            pop(call(210000, _OPERATOR_FILTER_REGISTRY, 0, 0x00, 0x44, 0x00, 0x00))
+            for {} iszero(call(gas(), _OPERATOR_FILTER_REGISTRY, 0, 0x00, 0x44, 0x00, 0x04)) {} {
+                let errorSelector := shr(224, mload(0x00))
+                // `bytes4(keccak256("AlreadyRegistered()"))`
+                if eq(errorSelector, 0x3a81d6fc) { break }
+                // `bytes4(keccak256("CannotSubscribeToSelf()"))`
+                if eq(errorSelector, 0x347f118f) { break }
+                // `bytes4(keccak256("NotRegistered(address)"))`
+                if eq(errorSelector, 0xbfc6c337) { break }
+                // `bytes4(keccak256("CannotSubscribeToRegistrantWithSubscription(address)"))`
+                if eq(errorSelector, 0x768e549c) { break }
+                // To prevent gas under-estimation.
+                revert(0, 0)
+            }
             // Restore the part of the free memory pointer that was overwritten,
             // which is guaranteed to be zero, because of Solidity's memory size limits.
             mstore(0x24, 0)
