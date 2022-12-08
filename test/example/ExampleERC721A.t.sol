@@ -133,4 +133,12 @@ contract ExampleERC721ATest is BaseRegistryTest {
         example.repeatRegistration();
         testSetOperatorFilteringEnabled();
     }
+
+    function testSupportsInterface() public {
+        assertTrue(example.supportsInterface(0x01ffc9a7)); // IERC165
+        assertTrue(example.supportsInterface(0x80ac58cd)); // IERC721
+        assertTrue(example.supportsInterface(0x5b5e139f)); // IERC721Metadata
+        assertTrue(example.supportsInterface(0x2a55205a)); // IERC2981
+        assertFalse(example.supportsInterface(0x10101010)); // Some unsupported interface.
+    }
 }
