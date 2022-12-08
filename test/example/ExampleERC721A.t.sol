@@ -8,6 +8,10 @@ contract TestableExampleERC721A is ExampleERC721A {
     function mint(address to, uint256 quantity) external {
         _mint(to, quantity);
     }
+
+    function repeatRegistration() public {
+        _registerForOperatorFiltering();
+    }
 }
 
 contract ExampleERC721ATest is BaseRegistryTest {

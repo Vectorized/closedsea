@@ -33,10 +33,6 @@ abstract contract ExampleERC721A is
         _setDefaultRoyalty(msg.sender, 500);
     }
 
-    function repeatRegistration() public {
-        _registerForOperatorFiltering();
-    }
-
     function setApprovalForAll(address operator, bool approved)
         public
         override (IERC721A, ERC721A)
