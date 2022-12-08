@@ -13,6 +13,9 @@ abstract contract OperatorFilterer {
     /// @dev The OpenSea operator filter registry.
     address internal constant _OPERATOR_FILTER_REGISTRY = 0x000000000000AAeB6D7670E522A718067333cd4E;
 
+    /// @dev The bit mask used to remove any dirty bits in an address.
+    uint256 private constant _CLEAN_ADDR_MASK = (1 << 160) - 1;
+
     /// @dev Registers the current contract to OpenSea's operator filter,
     /// and subscribe to the default OpenSea operator blocklist.
     /// Note: Will not revert nor update existing settings for repeated registration.
@@ -31,7 +34,7 @@ abstract contract OperatorFilterer {
             let functionSelector := 0x7d3e3dbe // `registerAndSubscribe(address,address)`.
 
             // Clean the upper 96 bits of `subscriptionOrRegistrantToCopy` in case they are dirty.
-            subscriptionOrRegistrantToCopy := shr(96, shl(96, subscriptionOrRegistrantToCopy))
+            subscriptionOrRegistrantToCopy := and(subscriptionOrRegistrantToCopy, _CLEAN_ADDR_MASK)
 
             for {} iszero(subscribe) {} {
                 if iszero(subscriptionOrRegistrantToCopy) {
