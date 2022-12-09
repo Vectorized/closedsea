@@ -34,8 +34,8 @@ npm install closedsea
 src
 ├─ OperatorFilterer.sol — "Operator Filterer for regular and upgradeable contracts"
 └─ example
-   ├─ ExampleERC721A.sol — "ERC721A example with demonstration of togglability"
-   ├─ ExampleERC721.sol — "ERC721 example with demonstration of togglability"
+   ├─ ExampleERC721A.sol — "ERC721A example"
+   ├─ ExampleERC721.sol — "ERC721 example"
    ├─ ExampleERC1155.sol — "ERC1155 example"
    └─ upgradeable
       ├─ ExampleERC721AUpgradeable.sol — "ERC721A upgradeable example"
