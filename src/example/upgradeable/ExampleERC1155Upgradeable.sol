@@ -93,4 +93,11 @@ abstract contract ExampleERC1155Upgradeable is
     function _operatorFilteringEnabled() internal view override returns (bool) {
         return operatorFilteringEnabled;
     }
+
+    function _isPriorityOperator(address operator) internal pure override returns (bool) {
+        // OpenSea Seaport Conduit:
+        // https://etherscan.io/address/0x1E0049783F008A0085193E00003D00cd54003c71
+        // https://goerli.etherscan.io/address/0x1E0049783F008A0085193E00003D00cd54003c71
+        return operator == address(0x1E0049783F008A0085193E00003D00cd54003c71);
+    }
 }
