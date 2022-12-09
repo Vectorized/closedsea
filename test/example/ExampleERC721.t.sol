@@ -8,6 +8,10 @@ contract TestableExampleERC721 is ExampleERC721 {
     function mint(address to, uint256 tokenId) external {
         _mint(to, tokenId);
     }
+
+    function repeatRegistration() public {
+        _registerForOperatorFiltering();
+    }
 }
 
 contract ExampleERC721Test is BaseRegistryTest {
@@ -133,5 +137,13 @@ contract ExampleERC721Test is BaseRegistryTest {
         vm.prank(example.owner());
         example.repeatRegistration();
         testSetOperatorFilteringEnabled();
+    }
+
+    function testSupportsInterface() public {
+        assertTrue(example.supportsInterface(0x01ffc9a7)); // IERC165
+        assertTrue(example.supportsInterface(0x80ac58cd)); // IERC721
+        assertTrue(example.supportsInterface(0x5b5e139f)); // IERC721Metadata
+        assertTrue(example.supportsInterface(0x2a55205a)); // IERC2981
+        assertFalse(example.supportsInterface(0x10101010)); // Some unsupported interface.
     }
 }
