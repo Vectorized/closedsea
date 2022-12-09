@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import {IERC721A, ERC721A} from "erc721a/ERC721A.sol";
-import {ERC721AQueryable} from "erc721a/extensions/ERC721AQueryable.sol";
-import {ERC721ABurnable} from "erc721a/extensions/ERC721ABurnable.sol";
-import {OperatorFilterer} from "../OperatorFilterer.sol";
-import {Ownable} from "openzeppelin-contracts/access/Ownable.sol";
-import {IERC2981, ERC2981} from "openzeppelin-contracts/token/common/ERC2981.sol";
+import { IERC721A, ERC721A } from "erc721a/ERC721A.sol";
+import { ERC721AQueryable } from "erc721a/extensions/ERC721AQueryable.sol";
+import { ERC721ABurnable } from "erc721a/extensions/ERC721ABurnable.sol";
+import { OperatorFilterer } from "../OperatorFilterer.sol";
+import { Ownable } from "openzeppelin-contracts/access/Ownable.sol";
+import { IERC2981, ERC2981 } from "openzeppelin-contracts/token/common/ERC2981.sol";
 
 /**
  * @title  ExampleERC721A

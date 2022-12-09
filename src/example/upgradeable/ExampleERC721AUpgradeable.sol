@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import {IERC721AUpgradeable, ERC721AUpgradeable} from "erc721a-upgradeable/ERC721AUpgradeable.sol";
-import {ERC721AQueryableUpgradeable} from
+import { IERC721AUpgradeable, ERC721AUpgradeable } from "erc721a-upgradeable/ERC721AUpgradeable.sol";
+import { ERC721AQueryableUpgradeable } from
     "erc721a-upgradeable/extensions/ERC721AQueryableUpgradeable.sol";
-import {ERC721ABurnableUpgradeable} from
+import { ERC721ABurnableUpgradeable } from
     "erc721a-upgradeable/extensions/ERC721ABurnableUpgradeable.sol";
-import {OperatorFilterer} from "../../OperatorFilterer.sol";
-import {OwnableUpgradeable} from "openzeppelin-contracts-upgradeable/access/OwnableUpgradeable.sol";
+import { OperatorFilterer } from "../../OperatorFilterer.sol";
+import { OwnableUpgradeable } from
+    "openzeppelin-contracts-upgradeable/access/OwnableUpgradeable.sol";
 import {
     IERC2981Upgradeable,
     ERC2981Upgradeable

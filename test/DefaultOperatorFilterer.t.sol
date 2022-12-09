@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import {OperatorFilterer} from "../src/OperatorFilterer.sol";
-import {BaseRegistryTest} from "./BaseRegistryTest.sol";
-import {DefaultFilterer} from "./helpers/DefaultFilterer.sol";
+import { OperatorFilterer } from "../src/OperatorFilterer.sol";
+import { BaseRegistryTest } from "./BaseRegistryTest.sol";
+import { DefaultFilterer } from "./helpers/DefaultFilterer.sol";
 
 contract DefaultOperatorFiltererTest is BaseRegistryTest {
     DefaultFilterer filterer;

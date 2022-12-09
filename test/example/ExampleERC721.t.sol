@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import {ExampleERC721} from "../../src/example/ExampleERC721.sol";
-import {BaseRegistryTest} from "../BaseRegistryTest.sol";
+import { ExampleERC721 } from "../../src/example/ExampleERC721.sol";
+import { BaseRegistryTest } from "../BaseRegistryTest.sol";
 
 contract TestableExampleERC721 is ExampleERC721 {
     function mint(address to, uint256 tokenId) external {

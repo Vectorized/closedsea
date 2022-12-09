@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import {OperatorFilterer} from "../../src/OperatorFilterer.sol";
-import {Ownable} from "openzeppelin-contracts/access/Ownable.sol";
-import {IOperatorFilterRegistry} from "operator-filter-registry/IOperatorFilterRegistry.sol";
+import { OperatorFilterer } from "../../src/OperatorFilterer.sol";
+import { Ownable } from "openzeppelin-contracts/access/Ownable.sol";
+import { IOperatorFilterRegistry } from "operator-filter-registry/IOperatorFilterRegistry.sol";
 
 contract Filterer is OperatorFilterer, Ownable {
     error OperatorNotAllowed(address operator);

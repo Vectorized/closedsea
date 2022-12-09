@@ -33,7 +33,7 @@ abstract contract OperatorFilterer {
             // Clean the upper 96 bits of `subscriptionOrRegistrantToCopy` in case they are dirty.
             subscriptionOrRegistrantToCopy := shr(96, shl(96, subscriptionOrRegistrantToCopy))
 
-            for {} iszero(subscribe) {} {
+            for { } iszero(subscribe) { } {
                 if iszero(subscriptionOrRegistrantToCopy) {
                     functionSelector := 0x4420e486 // `register(address)`.
                     break

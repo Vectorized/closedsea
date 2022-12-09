@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import {ExampleERC721Upgradeable} from
+import { ExampleERC721Upgradeable } from
     "../../../src/example/upgradeable/ExampleERC721Upgradeable.sol";
-import {BaseRegistryTest} from "../../BaseRegistryTest.sol";
-import {Initializable} from "openzeppelin-contracts-upgradeable/proxy/utils/Initializable.sol";
+import { BaseRegistryTest } from "../../BaseRegistryTest.sol";
+import { Initializable } from "openzeppelin-contracts-upgradeable/proxy/utils/Initializable.sol";
 
 contract TestableExampleERC721 is ExampleERC721Upgradeable {
     function mint(address to, uint256 tokenId) external {

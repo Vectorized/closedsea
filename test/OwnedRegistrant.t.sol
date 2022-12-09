@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import {OwnedRegistrant} from "operator-filter-registry/OwnedRegistrant.sol";
-import {BaseRegistryTest} from "./BaseRegistryTest.sol";
+import { OwnedRegistrant } from "operator-filter-registry/OwnedRegistrant.sol";
+import { BaseRegistryTest } from "./BaseRegistryTest.sol";
 
 contract OperatorFiltererTest is BaseRegistryTest {
     OwnedRegistrant registrant;

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import {OperatorFilterer} from "../src/OperatorFilterer.sol";
-import {BaseRegistryTest} from "./BaseRegistryTest.sol";
-import {Vm} from "forge-std/Vm.sol";
-import {Filterer} from "./helpers/Filterer.sol";
+import { OperatorFilterer } from "../src/OperatorFilterer.sol";
+import { BaseRegistryTest } from "./BaseRegistryTest.sol";
+import { Vm } from "forge-std/Vm.sol";
+import { Filterer } from "./helpers/Filterer.sol";
 
 contract ConcreteOperatorFilterer is OperatorFilterer {
     constructor(address registrant, bool sub) {
