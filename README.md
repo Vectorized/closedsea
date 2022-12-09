@@ -10,8 +10,9 @@
 >
 > **Please refer to the examples, updated for your convenience.**
 
-Gas optimized and flexible version of OpenSea's Mandatory Operator Filterer for royalties.
+## About the Project
 
+Gas optimized and flexible version of OpenSea's Mandatory Operator Filterer for royalties.
 
 ## Features
 
