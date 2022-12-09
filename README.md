@@ -4,7 +4,12 @@
 [![CI][ci-shield]][ci-url]
 [![MIT License][license-shield]][license-url]
 
+> **📢 The OpenSea deadline for contracts to include operator filtering has been extended to 2nd Jan 2023.   
+> However, there is a new requirement that all contracts published from then onwards MUST include ERC2981.  
+> Please refer to the examples, updated for your convenience.**
+
 Gas optimized and flexible version of OpenSea's Mandatory Operator Filterer for royalties.
+
 
 ## Features
 
