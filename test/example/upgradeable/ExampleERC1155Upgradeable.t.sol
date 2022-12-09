@@ -10,6 +10,10 @@ contract TestableExampleERC1155 is ExampleERC1155Upgradeable {
     function mint(address to, uint256 tokenId) external {
         _mint(to, tokenId, 1, "");
     }
+
+    function repeatRegistration() public {
+        _registerForOperatorFiltering();
+    }
 }
 
 contract ExampleER1155UpgradeableTest is BaseRegistryTest, Initializable {
@@ -103,5 +107,56 @@ contract ExampleER1155UpgradeableTest is BaseRegistryTest, Initializable {
         vm.startPrank(bob);
         vm.expectRevert(abi.encodeWithSelector(AddressFiltered.selector, alice));
         example.setApprovalForAll(alice, true);
+    }
+
+    function testSetOperatorFilteringEnabled() public {
+        uint256 randomness = uint256(keccak256(abi.encode(123)));
+        address alice = address(0xA11CE);
+        address to = makeAddr("to");
+        example.setOperatorFilteringEnabled(false);
+        vm.prank(alice);
+        example.setApprovalForAll(address(filteredAddress), true);
+
+        for (uint256 i = 0; i < 128; ++i) {
+            example.mint(alice, i);
+            bool enabled = randomness & 1 == 0;
+            vm.prank(example.owner());
+            example.setOperatorFilteringEnabled(enabled);
+
+            vm.prank(address(filteredAddress));
+            if (enabled) {
+                vm.expectRevert(abi.encodeWithSelector(AddressFiltered.selector, filteredAddress));
+            }
+            example.safeTransferFrom(alice, to, i, 1, "");
+
+            randomness = randomness >> 1;
+        }
+
+        for (uint256 i = 0; i < 128; ++i) {
+            bool enabled = randomness & 1 == 0;
+            vm.prank(example.owner());
+            example.setOperatorFilteringEnabled(enabled);
+
+            vm.prank(alice);
+            if (enabled) {
+                vm.expectRevert(abi.encodeWithSelector(AddressFiltered.selector, filteredAddress));
+            }
+            example.setApprovalForAll(address(filteredAddress), true);
+            randomness = randomness >> 1;
+        }
+    }
+
+    function testRepeatRegistrationOk() public {
+        vm.prank(example.owner());
+        example.repeatRegistration();
+        testSetOperatorFilteringEnabled();
+    }
+
+    function testSupportsInterface() public {
+        assertTrue(example.supportsInterface(0x01ffc9a7)); // IERC165
+        assertTrue(example.supportsInterface(0xd9b67a26)); // IERC1155
+        assertTrue(example.supportsInterface(0x0e89341c)); // IERC1155MetadataURI
+        assertTrue(example.supportsInterface(0x2a55205a)); // IERC2981
+        assertFalse(example.supportsInterface(0x10101010)); // Some unsupported interface.
     }
 }
