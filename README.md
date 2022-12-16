@@ -122,7 +122,7 @@ This repository is inspired by and directly modified from:
 [npm-shield]: https://img.shields.io/npm/v/closedsea.svg
 [npm-url]: https://www.npmjs.com/package/closedsea
 
-[ci-shield]: https://img.shields.io/github/workflow/status/vectorized/closedsea/ci?label=build
+[ci-shield]: https://img.shields.io/github/actions/workflow/status/vectorized/closedsea/ci.yml?label=build&branch=main
 [ci-url]: https://github.com/vectorized/closedsea/actions/workflows/ci.yml
 
 [license-shield]: https://img.shields.io/badge/License-MIT-green.svg
