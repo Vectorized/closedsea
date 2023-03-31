@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import {IERC721A, ERC721A} from "erc721a/ERC721A.sol";
+import {ERC721A} from "erc721a/ERC721A.sol";
 import {ERC721AQueryable} from "erc721a/extensions/ERC721AQueryable.sol";
 import {ERC721ABurnable} from "erc721a/extensions/ERC721ABurnable.sol";
 import {OperatorFilterer} from "../OperatorFilterer.sol";
@@ -35,7 +35,7 @@ abstract contract ExampleERC721A is
 
     function setApprovalForAll(address operator, bool approved)
         public
-        override (IERC721A, ERC721A)
+        override (ERC721A)
         onlyAllowedOperatorApproval(operator)
     {
         super.setApprovalForAll(operator, approved);
@@ -44,7 +44,7 @@ abstract contract ExampleERC721A is
     function approve(address operator, uint256 tokenId)
         public
         payable
-        override (IERC721A, ERC721A)
+        override (ERC721A)
         onlyAllowedOperatorApproval(operator)
     {
         super.approve(operator, tokenId);
@@ -53,7 +53,7 @@ abstract contract ExampleERC721A is
     function transferFrom(address from, address to, uint256 tokenId)
         public
         payable
-        override (IERC721A, ERC721A)
+        override (ERC721A)
         onlyAllowedOperator(from)
     {
         super.transferFrom(from, to, tokenId);
@@ -62,7 +62,7 @@ abstract contract ExampleERC721A is
     function safeTransferFrom(address from, address to, uint256 tokenId)
         public
         payable
-        override (IERC721A, ERC721A)
+        override (ERC721A)
         onlyAllowedOperator(from)
     {
         super.safeTransferFrom(from, to, tokenId);
@@ -71,7 +71,7 @@ abstract contract ExampleERC721A is
     function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory data)
         public
         payable
-        override (IERC721A, ERC721A)
+        override (ERC721A)
         onlyAllowedOperator(from)
     {
         super.safeTransferFrom(from, to, tokenId, data);
@@ -81,7 +81,7 @@ abstract contract ExampleERC721A is
         public
         view
         virtual
-        override (IERC721A, ERC721A, ERC2981)
+        override (ERC721A, ERC2981)
         returns (bool)
     {
         // Supports the following `interfaceId`s:
