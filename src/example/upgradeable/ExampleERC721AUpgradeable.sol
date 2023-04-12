@@ -44,7 +44,7 @@ abstract contract ExampleERC721AUpgradeable is
 
     function setApprovalForAll(address operator, bool approved)
         public
-        override (IERC721AUpgradeable, ERC721AUpgradeable)
+        override(IERC721AUpgradeable, ERC721AUpgradeable)
         onlyAllowedOperatorApproval(operator)
     {
         super.setApprovalForAll(operator, approved);
@@ -53,7 +53,7 @@ abstract contract ExampleERC721AUpgradeable is
     function approve(address operator, uint256 tokenId)
         public
         payable
-        override (IERC721AUpgradeable, ERC721AUpgradeable)
+        override(IERC721AUpgradeable, ERC721AUpgradeable)
         onlyAllowedOperatorApproval(operator)
     {
         super.approve(operator, tokenId);
@@ -62,7 +62,7 @@ abstract contract ExampleERC721AUpgradeable is
     function transferFrom(address from, address to, uint256 tokenId)
         public
         payable
-        override (IERC721AUpgradeable, ERC721AUpgradeable)
+        override(IERC721AUpgradeable, ERC721AUpgradeable)
         onlyAllowedOperator(from)
     {
         super.transferFrom(from, to, tokenId);
@@ -71,7 +71,7 @@ abstract contract ExampleERC721AUpgradeable is
     function safeTransferFrom(address from, address to, uint256 tokenId)
         public
         payable
-        override (IERC721AUpgradeable, ERC721AUpgradeable)
+        override(IERC721AUpgradeable, ERC721AUpgradeable)
         onlyAllowedOperator(from)
     {
         super.safeTransferFrom(from, to, tokenId);
@@ -80,7 +80,7 @@ abstract contract ExampleERC721AUpgradeable is
     function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory data)
         public
         payable
-        override (IERC721AUpgradeable, ERC721AUpgradeable)
+        override(IERC721AUpgradeable, ERC721AUpgradeable)
         onlyAllowedOperator(from)
     {
         super.safeTransferFrom(from, to, tokenId, data);
@@ -90,7 +90,7 @@ abstract contract ExampleERC721AUpgradeable is
         public
         view
         virtual
-        override (IERC721AUpgradeable, ERC721AUpgradeable, ERC2981Upgradeable)
+        override(IERC721AUpgradeable, ERC721AUpgradeable, ERC2981Upgradeable)
         returns (bool)
     {
         // Supports the following `interfaceId`s:

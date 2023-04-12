@@ -86,7 +86,7 @@ abstract contract ExampleERC721Upgradeable is
         public
         view
         virtual
-        override (ERC721Upgradeable, ERC2981Upgradeable)
+        override(ERC721Upgradeable, ERC2981Upgradeable)
         returns (bool)
     {
         // Supports the following `interfaceId`s:

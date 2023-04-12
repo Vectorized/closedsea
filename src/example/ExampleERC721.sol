@@ -73,7 +73,7 @@ abstract contract ExampleERC721 is ERC721, OperatorFilterer, Ownable, ERC2981 {
         public
         view
         virtual
-        override (ERC721, ERC2981)
+        override(ERC721, ERC2981)
         returns (bool)
     {
         // Supports the following `interfaceId`s:
