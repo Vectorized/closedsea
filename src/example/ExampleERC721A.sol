@@ -35,7 +35,7 @@ abstract contract ExampleERC721A is
 
     function setApprovalForAll(address operator, bool approved)
         public
-        override (IERC721A, ERC721A)
+        override(IERC721A, ERC721A)
         onlyAllowedOperatorApproval(operator)
     {
         super.setApprovalForAll(operator, approved);
@@ -44,44 +44,30 @@ abstract contract ExampleERC721A is
     function approve(address operator, uint256 tokenId)
         public
         payable
-        override (IERC721A, ERC721A)
+        override(IERC721A, ERC721A)
         onlyAllowedOperatorApproval(operator)
     {
         super.approve(operator, tokenId);
     }
 
+    /**
+     * @dev Both safeTransferFrom functions in ERC721A call this function
+     * so we don't need to override them.
+     */
     function transferFrom(address from, address to, uint256 tokenId)
         public
         payable
-        override (IERC721A, ERC721A)
+        override(IERC721A, ERC721A)
         onlyAllowedOperator(from)
     {
         super.transferFrom(from, to, tokenId);
-    }
-
-    function safeTransferFrom(address from, address to, uint256 tokenId)
-        public
-        payable
-        override (IERC721A, ERC721A)
-        onlyAllowedOperator(from)
-    {
-        super.safeTransferFrom(from, to, tokenId);
-    }
-
-    function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory data)
-        public
-        payable
-        override (IERC721A, ERC721A)
-        onlyAllowedOperator(from)
-    {
-        super.safeTransferFrom(from, to, tokenId, data);
     }
 
     function supportsInterface(bytes4 interfaceId)
         public
         view
         virtual
-        override (IERC721A, ERC721A, ERC2981)
+        override(IERC721A, ERC721A, ERC2981)
         returns (bool)
     {
         // Supports the following `interfaceId`s:

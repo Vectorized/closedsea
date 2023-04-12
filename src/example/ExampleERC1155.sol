@@ -57,7 +57,7 @@ abstract contract ExampleERC1155 is ERC1155, OperatorFilterer, Ownable, ERC2981 
         public
         view
         virtual
-        override (ERC1155, ERC2981)
+        override(ERC1155, ERC2981)
         returns (bool)
     {
         // Supports the following `interfaceId`s:
