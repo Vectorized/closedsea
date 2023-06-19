@@ -15,7 +15,8 @@ remappings = [
   "openzeppelin-contracts/=lib/openzeppelin-contracts/contracts/",
   "erc721a=lib/erc721a/contracts/",
   "erc721a-upgradeable=lib/erc721a-upgradeable/contracts/",
-  "operator-filter-registry/=lib/operator-filter-registry/src/"
+  "operator-filter-registry/=lib/operator-filter-registry/src/",
+  "solady/=lib/solady/src/"
 ]
 
 [fmt]

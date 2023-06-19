@@ -16,7 +16,7 @@ contract TestableExampleERC1155 is ExampleERC1155Upgradeable {
     }
 }
 
-contract ExampleER1155UpgradeableTest is BaseRegistryTest, Initializable {
+contract ExampleERC1155UpgradeableTest is BaseRegistryTest, Initializable {
     TestableExampleERC1155 example;
     address filteredAddress;
 
