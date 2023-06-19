@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import {ExampleERC1155} from "../../src/example/ExampleERC1155.sol";
+import {ExampleSoladyERC1155} from "../../src/example/ExampleSoladyERC1155.sol";
 import {BaseRegistryTest} from "../BaseRegistryTest.sol";
 
-contract TestableExampleERC1155 is ExampleERC1155 {
+contract TestableExampleSoladyERC1155 is ExampleSoladyERC1155 {
     function mint(address to, uint256 tokenId) external {
         _mint(to, tokenId, 1, "");
     }
@@ -14,8 +14,8 @@ contract TestableExampleERC1155 is ExampleERC1155 {
     }
 }
 
-contract ExampleERC1155Test is BaseRegistryTest {
-    TestableExampleERC1155 example;
+contract ExampleSoladyERC1155Test is BaseRegistryTest {
+    TestableExampleSoladyERC1155 example;
     address filteredAddress;
 
     function setUp() public override {
@@ -28,7 +28,7 @@ contract ExampleERC1155Test is BaseRegistryTest {
         registry.updateOperator(address(DEFAULT_SUBSCRIPTION), filteredAddress, true);
         vm.stopPrank();
 
-        example = new TestableExampleERC1155();
+        example = new TestableExampleSoladyERC1155();
     }
 
     function testFilter() public {
