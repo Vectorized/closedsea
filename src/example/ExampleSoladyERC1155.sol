@@ -17,6 +17,8 @@ abstract contract ExampleSoladyERC1155 is ERC1155, OperatorFilterer, Ownable, ER
     bool public operatorFilteringEnabled;
 
     constructor() {
+        // Solady's Ownable requires `_initializeOwner` to be called in
+        // the constructor / initializer.
         _initializeOwner(msg.sender);
         _registerForOperatorFiltering();
         operatorFilteringEnabled = true;
