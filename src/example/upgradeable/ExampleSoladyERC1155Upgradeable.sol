@@ -24,6 +24,8 @@ abstract contract ExampleSoladyERC1155Upgradeable is ERC1155, OperatorFilterer, 
         initialized = true;
         emit Initialized(1);
 
+        // Solady's Ownable requires `_initializeOwner` to be called in
+        // the constructor / initializer.
         _initializeOwner(msg.sender);
         _registerForOperatorFiltering();
         operatorFilteringEnabled = true;

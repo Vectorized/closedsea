@@ -24,6 +24,8 @@ abstract contract ExampleSoladyERC721Upgradeable is ERC721, OperatorFilterer, Ow
         initialized = true;
         emit Initialized(1);
 
+        // Solady's Ownable requires `_initializeOwner` to be called in
+        // the constructor / initializer.
         _initializeOwner(msg.sender);
         _registerForOperatorFiltering();
         operatorFilteringEnabled = true;
@@ -58,6 +60,10 @@ abstract contract ExampleSoladyERC721Upgradeable is ERC721, OperatorFilterer, Ow
         super.approve(operator, tokenId);
     }
 
+    /**
+     * @dev Both safeTransferFrom functions in Solady's ERC721 call this function
+     * so we don't need to override them.
+     */
     function transferFrom(address from, address to, uint256 tokenId)
         public
         payable
@@ -65,24 +71,6 @@ abstract contract ExampleSoladyERC721Upgradeable is ERC721, OperatorFilterer, Ow
         onlyAllowedOperator(from)
     {
         super.transferFrom(from, to, tokenId);
-    }
-
-    function safeTransferFrom(address from, address to, uint256 tokenId)
-        public
-        payable
-        override
-        onlyAllowedOperator(from)
-    {
-        super.safeTransferFrom(from, to, tokenId);
-    }
-
-    function safeTransferFrom(address from, address to, uint256 tokenId, bytes calldata data)
-        public
-        payable
-        override
-        onlyAllowedOperator(from)
-    {
-        super.safeTransferFrom(from, to, tokenId, data);
     }
 
     function tokenURI(uint256) public pure override returns (string memory) {
